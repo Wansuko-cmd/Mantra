@@ -34,3 +34,4 @@ include(":lib")
 
 // TODO
 include(":todo:domain")
+include(":todo:usecase")
