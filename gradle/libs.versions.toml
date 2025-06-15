@@ -15,6 +15,9 @@ androidx-compose-lifecycle = "2.9.1"
 androidx-compose-navigation = "2.9.0"
 androidx-compose-hilt-navigation = "1.2.0"
 
+# Koin
+koin = "4.1.0"
+
 # DataStore
 datastore = "1.1.7"
 
@@ -45,6 +48,12 @@ androidx-compose-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-r
 androidx-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidx-compose-navigation" }
 androidx-compose-hilt = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidx-compose-hilt-navigation" }
 
+# Koin
+koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
+koin-core = { group = "io.insert-koin", name = "koin-core" }
+koin-android = { group = "io.insert-koin", name = "koin-android" }
+koin-compose = { group = "io.insert-koin", name = "koin-compose" }
+
 # DataStore
 datastore-core-okio = { group = "androidx.datastore", name = "datastore-core-okio", version.ref = "datastore" }
 
@@ -64,6 +73,7 @@ androidx-compose = [
     "androidx-compose-navigation",
     "androidx-compose-hilt",
 ]
+koin = ["koin-core", "koin-android", "koin-compose"]
 
 [plugins]
 # Kotlin

@@ -39,4 +39,7 @@ dependencies {
     implementation(projects.utils)
 
     implementation(libs.bundles.androidx)
+
+    implementation(platform(libs.koin.bom))
+    implementation(libs.bundles.koin)
 }
