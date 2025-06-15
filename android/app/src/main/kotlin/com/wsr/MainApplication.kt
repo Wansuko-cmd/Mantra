@@ -16,5 +16,12 @@ class MainApplication : Application() {
         }
     }
 
-    private val module = module {}
+    private val module = module {
+        single { MemoController(::producePath) }
+    }
+
+    private fun producePath(name: String, initialize: Boolean = false) = filesDir
+        .resolve(name)
+        .apply { if (initialize) delete() }
+        .absolutePath
 }

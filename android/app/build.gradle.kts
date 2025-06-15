@@ -37,6 +37,8 @@ android {
 dependencies {
     implementation(projects.android.utils)
 
+    implementation(projects.todo.controller)
+
     implementation(libs.bundles.androidx)
 
     implementation(platform(libs.koin.bom))
