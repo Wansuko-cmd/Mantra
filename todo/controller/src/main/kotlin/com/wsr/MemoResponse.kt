@@ -1,0 +1,39 @@
+package com.wsr
+
+data class MemoResponse(
+    val id: MemoResponseId,
+    val title: String,
+    val description: String,
+    val items: List<ItemResponse>,
+) {
+    companion object {
+        internal fun from(memo: Memo) = MemoResponse(
+            id = MemoResponseId(memo.id.value),
+            title = memo.title,
+            description = memo.description,
+            items = memo.items.map { ItemResponse.from(it) },
+        )
+    }
+}
+
+data class ItemResponse(
+    val id: ItemResponseId,
+    val title: String,
+    val description: String,
+    val checked: Boolean,
+) {
+    companion object {
+        internal fun from(item: Item) = ItemResponse(
+            id = ItemResponseId(item.id.value),
+            title = item.title,
+            description = item.description,
+            checked = item.checked,
+        )
+    }
+}
+
+@JvmInline
+value class MemoResponseId(val value: String)
+
+@JvmInline
+value class ItemResponseId(val value: String)
