@@ -1,5 +1,6 @@
 plugins {
     alias(buildLogic.plugins.kotlin.multiplatform)
+    alias(libs.plugins.serialization)
 }
 
 android {
@@ -14,6 +15,9 @@ kotlin {
 
                 implementation(libs.kotlin.coroutine)
                 implementation(libs.kotlin.datetime)
+                implementation(libs.kotlin.serialization)
+
+                implementation(libs.datastore.core.okio)
             }
         }
     }

@@ -3,6 +3,7 @@
 kotlin = "2.1.21"
 coroutine = "1.10.2"
 datetime = "0.6.2"
+serialization = "1.8.1"
 
 # Test
 test-truth = "1.4.4"
@@ -24,6 +25,9 @@ androidx-compose-lifecycle = "2.9.1"
 androidx-compose-navigation = "2.9.0"
 androidx-compose-hilt-navigation = "1.2.0"
 
+# DataStore
+datastore = "1.1.7"
+
 # Gradle
 gradle-android = "8.10.1"
 
@@ -34,6 +38,7 @@ ktlint = "12.3.0"
 # Kotlin
 kotlin-coroutine = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutine" }
 kotlin-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "datetime" }
+kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 
 # Test
 test-truth = { group = "com.google.truth", name = "truth", version.ref = "test-truth" }
@@ -66,6 +71,9 @@ androidx-compose-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-
 androidx-compose-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-test-uitooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 
+# DataStore
+datastore-core-okio = { group = "androidx.datastore", name = "datastore-core-okio", version.ref = "datastore" }
+
 # Gradle
 gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 gradle-android = { group = "com.android.tools.build", name = "gradle", version.ref = "gradle-android" }
@@ -94,6 +102,7 @@ androidx-compose-test = [
 # Kotlin
 kotlin = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 # Android
 android-application = { id = "com.android.application", version.ref = "gradle-android" }
