@@ -26,11 +26,14 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Mantra"
+
+include(":utils")
+include(":lib")
+
+// APP
 include(":android:app")
 include(":android:ui")
-include(":utils")
-
-include(":lib")
+include(":android:utils")
 
 // TODO
 include(":todo:domain")
