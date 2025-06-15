@@ -9,8 +9,4 @@ android {
 
 dependencies {
     implementation(libs.bundles.androidx)
-
-    testImplementation(libs.bundles.test)
-
-    androidTestImplementation(libs.bundles.androidx.test)
 }

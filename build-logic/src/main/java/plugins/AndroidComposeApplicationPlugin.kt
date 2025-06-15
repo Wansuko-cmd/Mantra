@@ -14,7 +14,6 @@ import plugins.ext.getPlugin
 import plugins.ext.getVersion
 import plugins.ext.implementation
 import plugins.ext.libs
-import plugins.ext.testImplementation
 
 class AndroidComposeApplicationPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -38,7 +37,6 @@ class AndroidComposeApplicationPlugin : Plugin<Project> {
             dependencies {
                 implementation(platform(libs.getLibrary("androidx.compose.bom")))
                 implementation(libs.getBundle("androidx.compose"))
-                testImplementation(libs.getBundle("androidx.compose.test"))
             }
         }
     }
