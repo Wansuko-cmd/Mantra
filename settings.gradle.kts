@@ -32,7 +32,6 @@ include(":lib")
 
 // APP
 include(":android:app")
-include(":android:ui")
 include(":android:utils")
 
 // TODO
