@@ -16,6 +16,8 @@ kotlin {
 
                 implementation(libs.kotlin.coroutine)
                 implementation(libs.kotlin.datetime)
+
+                implementation(libs.mcp)
             }
         }
     }
