@@ -9,9 +9,9 @@ class UpdateItemUseCase(private val repository: MemoRepository) {
     suspend operator fun invoke(
         memoId: MemoId,
         itemId: ItemId,
-        title: String,
-        description: String,
-        checked: Boolean,
+        title: String?,
+        description: String?,
+        checked: Boolean?,
     ) {
         val memo = repository.get(memoId).first()
         val newMemo = memo.updateItem(

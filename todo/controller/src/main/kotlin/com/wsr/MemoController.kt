@@ -52,9 +52,9 @@ class MemoController(private val productPath: (name: String) -> String) {
     suspend fun updateItem(
         memoId: MemoResponseId,
         itemId: ItemResponseId,
-        title: String,
-        description: String,
-        checked: Boolean,
+        title: String? = null,
+        description: String? = null,
+        checked: Boolean? = null,
     ) {
         UpdateItemUseCase(repository)
             .invoke(

@@ -26,17 +26,17 @@ data class Memo private constructor(
 
     fun updateItem(
         id: ItemId,
-        title: String,
-        description: String,
-        checked: Boolean,
+        title: String?,
+        description: String?,
+        checked: Boolean?,
     ) = copy(
         items = items.map { item ->
             if (item.id == id) {
                 Item(
                     id = id,
-                    title = title,
-                    description = description,
-                    checked = checked,
+                    title = title ?: item.title,
+                    description = description ?: item.description,
+                    checked = checked ?: item.checked,
                 )
             } else {
                 item
