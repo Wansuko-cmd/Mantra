@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.wsr.MemoResponse
 import com.wsr.MemoResponseId
 import com.wsr.theme.MantraTheme
 import com.wsr.theme.colors
@@ -72,32 +73,11 @@ private fun MemoIndexScreen(
                 .padding(horizontal = 16.dp),
         ) {
             items(uiState.memos) { memo ->
-                Row(
-                    modifier = Modifier
-                        .padding(vertical = 12.dp)
-                        .clickable { onClickMemo(memo.id) }
-                        .fillMaxWidth()
-                        .background(
-                            color = MantraTheme.colors.FieldBeige10,
-                            shape = MantraTheme.shape.Small,
-                        )
-                        .border(
-                            width = 1.dp,
-                            color = MantraTheme.colors.Black30,
-                            shape = MantraTheme.shape.Small,
-                        )
-                        .padding(20.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = memo.title,
-                        modifier = Modifier.weight(1f),
-                    )
-                    Icon(
-                        imageVector = Icons.Outlined.MoreVert,
-                        contentDescription = null,
-                    )
-                }
+                MemoRow(
+                    memo = memo,
+                    onClick = { onClickMemo(memo.id) },
+                    modifier = Modifier.padding(vertical = 12.dp),
+                )
             }
         }
     }
@@ -107,6 +87,39 @@ private fun MemoIndexScreen(
         MemoIndexCreateDialog(
             uiState = createDialogUiState,
             listener = createDialogListener,
+        )
+    }
+}
+
+@Composable
+private fun MemoRow(
+    memo: MemoResponse,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .clickable(onClick = onClick)
+            .fillMaxWidth()
+            .background(
+                color = MantraTheme.colors.FieldBeige10,
+                shape = MantraTheme.shape.Small,
+            )
+            .border(
+                width = 1.dp,
+                color = MantraTheme.colors.Black30,
+                shape = MantraTheme.shape.Small,
+            )
+            .padding(20.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = memo.title,
+            modifier = Modifier.weight(1f),
+        )
+        Icon(
+            imageVector = Icons.Outlined.MoreVert,
+            contentDescription = null,
         )
     }
 }
