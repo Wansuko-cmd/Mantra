@@ -15,6 +15,8 @@ androidx-compose-lifecycle = "2.9.1"
 androidx-compose-navigation = "2.9.0"
 androidx-compose-hilt-navigation = "1.2.0"
 
+compose-rin = "0.3.0"
+
 # Koin
 koin = "4.1.0"
 
@@ -47,6 +49,7 @@ androidx-compose-preview = { group = "androidx.compose.ui", name = "ui-tooling-p
 androidx-compose-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-compose-lifecycle" }
 androidx-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidx-compose-navigation" }
 androidx-compose-hilt = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidx-compose-hilt-navigation" }
+compose-rin = { module = "io.github.takahirom.rin:rin", version.ref = "compose-rin" }
 
 # Koin
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
@@ -72,6 +75,7 @@ androidx-compose = [
     "androidx-compose-lifecycle",
     "androidx-compose-navigation",
     "androidx-compose-hilt",
+    "compose-rin",
 ]
 koin = ["koin-core", "koin-android", "koin-compose"]
 
