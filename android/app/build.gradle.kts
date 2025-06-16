@@ -2,7 +2,7 @@
 
 plugins {
     alias(buildLogic.plugins.android.compose.application)
-    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.serialization)
 }
 
 android {
@@ -39,6 +39,7 @@ dependencies {
 
     implementation(projects.todo.controller)
 
+    implementation(libs.kotlin.serialization)
     implementation(libs.bundles.androidx)
 
     implementation(platform(libs.koin.bom))
