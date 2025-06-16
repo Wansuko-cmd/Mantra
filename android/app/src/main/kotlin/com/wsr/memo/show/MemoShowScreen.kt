@@ -6,5 +6,6 @@ import com.wsr.MemoResponseId
 
 @Composable
 internal fun MemoShowRoute(memoId: MemoResponseId) {
+    val presenter = rememberMemoShowPresenter(memoId)
     Text(memoId.value)
 }
