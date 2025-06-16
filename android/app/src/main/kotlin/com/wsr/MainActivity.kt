@@ -3,7 +3,12 @@ package com.wsr
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material3.Text
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import com.wsr.memo.index.MemoIndexRoute
+import com.wsr.memo.show.MemoShowRoute
 import com.wsr.theme.MantraTheme
 
 class MainActivity : ComponentActivity() {
@@ -11,7 +16,24 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MantraTheme {
-                Text("Hello World")
+                val controller = rememberNavController()
+                NavHost(
+                    navController = controller,
+                    startDestination = Route.Memo.Index,
+                ) {
+                    composable<Route.Memo.Index> {
+                        MemoIndexRoute(
+                            navigateToShow = { memoId ->
+                                val route = Route.Memo.Show.create(memoId)
+                                controller.navigate(route)
+                            },
+                        )
+                    }
+                    composable<Route.Memo.Show> { backStackEntry ->
+                        val memoId = backStackEntry.toRoute<Route.Memo.Show>().memoId
+                        MemoShowRoute(memoId)
+                    }
+                }
             }
         }
     }
