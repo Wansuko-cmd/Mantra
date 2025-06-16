@@ -10,6 +10,6 @@ class UpdateMemoUseCase(private val repository: MemoRepository) {
     ) {
         val memo = repository.get(id).first()
         val newMemo = memo.update(title, description)
-        repository.create(newMemo)
+        repository.update(newMemo)
     }
 }
