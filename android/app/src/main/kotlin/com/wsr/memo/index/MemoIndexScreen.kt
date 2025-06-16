@@ -19,8 +19,14 @@ internal fun MemoIndexRoute(navigateToShow: (MemoResponseId) -> Unit) {
     val presenter = rememberMemoIndexPresenter()
     MemoIndexScreen(
         uiState = presenter.uiState,
-        onClickFabButton = {},
+        onClickFabButton = presenter::onClickFabButton,
         onClickMemo = navigateToShow,
+        createDialogListener = MemoIndexCreateDialogListener(
+            onDismiss = presenter::onDismissCreateDialog,
+            onChangeTitle = presenter::onChangeCreateDialogTitle,
+            onChangeDescription = presenter::onChangeCreateDialogDescription,
+            onClickPrimaryButton = presenter::onClickCreateDialogPrimaryButton,
+        ),
     )
 }
 
@@ -29,6 +35,7 @@ private fun MemoIndexScreen(
     uiState: MemoIndexUiState,
     onClickFabButton: () -> Unit,
     onClickMemo: (memoId: MemoResponseId) -> Unit,
+    createDialogListener: MemoIndexCreateDialogListener,
 ) {
     Scaffold(
         floatingActionButton = {
@@ -51,5 +58,13 @@ private fun MemoIndexScreen(
                 )
             }
         }
+    }
+
+    val createDialogUiState = uiState.createDialogUiState
+    if (createDialogUiState != null) {
+        MemoIndexCreateDialog(
+            uiState = createDialogUiState,
+            listener = createDialogListener,
+        )
     }
 }

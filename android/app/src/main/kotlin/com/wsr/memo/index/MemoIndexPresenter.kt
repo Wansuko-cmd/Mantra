@@ -10,6 +10,7 @@ import com.wsr.UiState
 import io.github.takahirom.rin.rememberRetained
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 @Composable
@@ -33,8 +34,39 @@ internal class MemoIndexPresenter(
             .onEach { uiState = MemoIndexUiState(it) }
             .launchIn(scope)
     }
+
+    fun onClickFabButton() {
+        uiState = uiState.copy(createDialogUiState = MemoIndexCreateDialogUiState())
+    }
+
+    fun onDismissCreateDialog() {
+        uiState = uiState.copy(createDialogUiState = null)
+    }
+
+    fun onChangeCreateDialogTitle(title: String) {
+        val newUiState = uiState.createDialogUiState?.copy(title = title)
+        uiState = uiState.copy(createDialogUiState = newUiState)
+    }
+
+    fun onChangeCreateDialogDescription(description: String) {
+        val newUiState = uiState.createDialogUiState?.copy(description = description)
+        uiState = uiState.copy(createDialogUiState = newUiState)
+    }
+
+    fun onClickCreateDialogPrimaryButton() {
+        val (title, description) = uiState.createDialogUiState ?: return
+        scope.launch {
+            controller.create(title = title, description = description)
+        }
+    }
 }
 
 internal data class MemoIndexUiState(
     val memos: List<MemoResponse> = emptyList(),
+    val createDialogUiState: MemoIndexCreateDialogUiState? = null,
 ) : UiState
+
+internal data class MemoIndexCreateDialogUiState(
+    val title: String = "",
+    val description: String = "",
+)
