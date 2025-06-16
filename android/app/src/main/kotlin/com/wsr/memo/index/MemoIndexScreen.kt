@@ -159,11 +159,17 @@ private fun MemoRow(
             ) {
                 DropdownMenuItem(
                     text = { Text(text = "詳細") },
-                    onClick = onClickDetail,
+                    onClick = {
+                        onClickDetail()
+                        expanded = false
+                    },
                 )
                 DropdownMenuItem(
                     text = { Text(text = "削除する", color = MantraTheme.colors.Red80) },
-                    onClick = onClickDelete,
+                    onClick = {
+                        onClickDelete()
+                        expanded = false
+                    },
                 )
             }
         }
