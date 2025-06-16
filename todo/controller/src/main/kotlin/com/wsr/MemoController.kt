@@ -36,6 +36,11 @@ class MemoController(private val productPath: (name: String) -> String) {
             )
     }
 
+    suspend fun delete(id: MemoResponseId) {
+        DeleteMemoUseCase(repository)
+            .invoke(id = MemoId(id.value))
+    }
+
     suspend fun addItem(
         id: MemoResponseId,
         title: String,

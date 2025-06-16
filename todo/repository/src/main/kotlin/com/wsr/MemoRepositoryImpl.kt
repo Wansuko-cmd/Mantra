@@ -17,6 +17,10 @@ class MemoRepositoryImpl(private val memoStore: MemoStore) : MemoRepository {
     override suspend fun update(memo: Memo) {
         memoStore.update(memo.toModel())
     }
+
+    override suspend fun delete(id: MemoId) {
+        memoStore.delete(id.value)
+    }
 }
 
 private fun MemoModel.toMemo() = Memo.reconstruct(

@@ -43,7 +43,7 @@ internal fun MemoIndexRoute(navigateToShow: (MemoResponseId) -> Unit) {
         onClickFabButton = presenter::onClickFabButton,
         onClickMemo = navigateToShow,
         onClickMemoDetail = presenter::onClickMemoDetail,
-        onClickMemoDelete = {},
+        onClickMemoDelete = presenter::onClickMemoDelete,
         createDialogListener = MemoIndexCreateDialogListener(
             onDismiss = presenter::onDismissCreateDialog,
             onChangeTitle = presenter::onChangeCreateDialogTitle,

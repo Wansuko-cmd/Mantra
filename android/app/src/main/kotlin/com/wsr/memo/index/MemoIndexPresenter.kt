@@ -73,6 +73,9 @@ internal class MemoIndexPresenter(
     }
 
     fun onClickMemoDelete(id: MemoResponseId) {
+        scope.launch {
+            controller.delete(id = id)
+        }
     }
 
     fun onDismissDetailBottomSheet() {

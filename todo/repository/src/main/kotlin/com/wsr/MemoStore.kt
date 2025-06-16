@@ -28,6 +28,10 @@ class MemoStore(private val producePath: () -> String) {
             prevData.subList(0, index) + memo + prevData.subList(index + 1, prevData.size)
         }
     }
+
+    suspend fun delete(id: String) {
+        db.updateData { prevData -> prevData.filter { it.id != id } }
+    }
 }
 
 @Serializable
