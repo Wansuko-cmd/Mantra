@@ -1,13 +1,55 @@
 package com.wsr.memo.index
 
-import androidx.compose.material3.Button
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.wsr.MemoResponseId
 
 @Composable
 internal fun MemoIndexRoute(navigateToShow: (MemoResponseId) -> Unit) {
-    Button(onClick = { navigateToShow(MemoResponseId("Sample")) }) {
-        Text("Sample")
+    val presenter = rememberMemoIndexPresenter()
+    MemoIndexScreen(
+        uiState = presenter.uiState,
+        onClickFabButton = {},
+        onClickMemo = navigateToShow,
+    )
+}
+
+@Composable
+private fun MemoIndexScreen(
+    uiState: MemoIndexUiState,
+    onClickFabButton: () -> Unit,
+    onClickMemo: (memoId: MemoResponseId) -> Unit,
+) {
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick = onClickFabButton) { }
+        },
+    ) { innerPadding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+        ) {
+            items(uiState.memos) { memo ->
+                Text(
+                    text = memo.title,
+                    modifier = Modifier
+                        .padding(12.dp)
+                        .fillMaxWidth()
+                        .clickable { onClickMemo(memo.id) }
+                        .padding(24.dp),
+                )
+            }
+        }
     }
 }
