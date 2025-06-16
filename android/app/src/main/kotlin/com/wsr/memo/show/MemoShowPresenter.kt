@@ -78,12 +78,44 @@ internal class MemoShowPresenter(
             )
         }
     }
+
+    fun onDismissDetailBottomSheet() {
+        val detailBottomSheet = uiState.detailBottomSheet
+        if (detailBottomSheet != null) {
+            scope.launch {
+                controller.updateItem(
+                    memoId = memoId,
+                    itemId = detailBottomSheet.id,
+                    title = detailBottomSheet.title,
+                    description = detailBottomSheet.description,
+                )
+            }
+            uiState = uiState.copy(detailBottomSheet = null)
+        }
+    }
+
+    fun onChangeDetailBottomSheetTitle(title: String) {
+        val newUiState = uiState.detailBottomSheet?.copy(title = title)
+        uiState = uiState.copy(detailBottomSheet = newUiState)
+    }
+
+    fun onChangeDetailBottomSheetDescription(description: String) {
+        val newUiState = uiState.detailBottomSheet?.copy(description = description)
+        uiState = uiState.copy(detailBottomSheet = newUiState)
+    }
 }
 
 internal data class MemoShowUiState(
     val title: String = "",
     val items: List<ItemResponse> = emptyList(),
+    val detailBottomSheet: MemoShowDetailBottomSheetUiState? = null,
 ) : UiState {
     fun updateItem(id: ItemResponseId, block: (ItemResponse) -> ItemResponse) =
         copy(items = items.map { if (it.id == id) block(it) else it })
 }
+
+internal data class MemoShowDetailBottomSheetUiState(
+    val id: ItemResponseId,
+    val title: String,
+    val description: String,
+)

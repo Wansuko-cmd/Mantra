@@ -101,18 +101,18 @@ private fun MemoIndexScreen(
         }
     }
 
-    val createDialogUiState = uiState.createDialog
-    if (createDialogUiState != null) {
+    val createDialog = uiState.createDialog
+    if (createDialog != null) {
         MemoIndexCreateDialog(
-            uiState = createDialogUiState,
+            uiState = createDialog,
             listener = createDialogListener,
         )
     }
 
-    val detailBottomSheetUiState = uiState.detailBottomSheet
-    if (detailBottomSheetUiState != null) {
+    val detailBottomSheet = uiState.detailBottomSheet
+    if (detailBottomSheet != null) {
         MemoIndexDetailBottomSheet(
-            uiState = detailBottomSheetUiState,
+            uiState = detailBottomSheet,
             listener = detailBottomSheetListener,
         )
     }

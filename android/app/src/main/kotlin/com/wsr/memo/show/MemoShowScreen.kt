@@ -48,6 +48,11 @@ internal fun MemoShowRoute(memoId: MemoResponseId) {
         onClickFabButton = presenter::onClickFabButton,
         onChangeItemTitle = presenter::onChangeItemTitle,
         onChangeItemChecked = presenter::onChangeItemChecked,
+        detailBottomSheetListener = MemoShowDetailBottomSheetListener(
+            onDismiss = presenter::onDismissDetailBottomSheet,
+            onChangeTitle = presenter::onChangeDetailBottomSheetTitle,
+            onChangeDescription = presenter::onChangeDetailBottomSheetDescription,
+        ),
     )
 }
 
@@ -58,6 +63,8 @@ private fun MemoShowScreen(
     onClickFabButton: () -> Unit,
     onChangeItemTitle: (id: ItemResponseId, title: String) -> Unit,
     onChangeItemChecked: (id: ItemResponseId, checked: Boolean) -> Unit,
+    detailBottomSheetListener: MemoShowDetailBottomSheetListener,
+
 ) {
     Scaffold(
         topBar = {
@@ -87,6 +94,14 @@ private fun MemoShowScreen(
                 )
             }
         }
+    }
+
+    val detailBottomSheetUiState = uiState.detailBottomSheet
+    if (detailBottomSheetUiState != null) {
+        MemoShowDetailBottomSheet(
+            uiState = detailBottomSheetUiState,
+            listener = detailBottomSheetListener,
+        )
     }
 }
 
