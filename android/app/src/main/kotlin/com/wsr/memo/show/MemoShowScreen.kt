@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.wsr.ItemResponse
 import com.wsr.ItemResponseId
 import com.wsr.MemoResponseId
 import com.wsr.theme.MantraTheme
@@ -78,54 +79,69 @@ private fun MemoShowScreen(
                 .padding(horizontal = 16.dp),
         ) {
             items(uiState.items) { item ->
-                Row(
-                    modifier = Modifier
-                        .padding(vertical = 12.dp)
-                        .fillMaxWidth()
-                        .background(
-                            color = MantraTheme.colors.FieldBeige10,
-                            shape = MantraTheme.shape.Small,
-                        )
-                        .border(
-                            width = 1.dp,
-                            color = MantraTheme.colors.Black30,
-                            shape = MantraTheme.shape.Small,
-                        )
-                        .padding(12.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Checkbox(
-                        checked = item.checked,
-                        onCheckedChange = { onChangeItemChecked(item.id, it) },
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    BasicTextField(
-                        value = item.title,
-                        onValueChange = { onChangeItemTitle(item.id, it) },
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight(),
-                        textStyle = TextStyle(
-                            fontWeight = FontWeight.Normal,
-                            fontSize = 20.sp,
-                            lineHeight = 32.sp,
-                            letterSpacing = 0.sp,
-                        ),
-                        decorationBox = @Composable { innerTextField ->
-                            TextFieldDefaults.DecorationBox(
-                                value = item.title,
-                                innerTextField = innerTextField,
-                                enabled = true,
-                                singleLine = true,
-                                visualTransformation = VisualTransformation.None,
-                                interactionSource = remember { MutableInteractionSource() },
-                                container = {},
-                                contentPadding = PaddingValues(0.dp),
-                            )
-                        },
-                    )
-                }
+                ItemRow(
+                    item = item,
+                    onChangeItemTitle = { onChangeItemTitle(item.id, it) },
+                    onChangeItemChecked = { onChangeItemChecked(item.id, it) },
+                    modifier = Modifier.padding(vertical = 12.dp),
+                )
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ItemRow(
+    item: ItemResponse,
+    onChangeItemTitle: (title: String) -> Unit,
+    onChangeItemChecked: (checked: Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                color = MantraTheme.colors.FieldBeige10,
+                shape = MantraTheme.shape.Small,
+            )
+            .border(
+                width = 1.dp,
+                color = MantraTheme.colors.Black30,
+                shape = MantraTheme.shape.Small,
+            )
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Checkbox(
+            checked = item.checked,
+            onCheckedChange = { onChangeItemChecked(it) },
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        BasicTextField(
+            value = item.title,
+            onValueChange = { onChangeItemTitle(it) },
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight(),
+            textStyle = TextStyle(
+                fontWeight = FontWeight.Normal,
+                fontSize = 20.sp,
+                lineHeight = 32.sp,
+                letterSpacing = 0.sp,
+            ),
+            decorationBox = @Composable { innerTextField ->
+                TextFieldDefaults.DecorationBox(
+                    value = item.title,
+                    innerTextField = innerTextField,
+                    enabled = true,
+                    singleLine = true,
+                    visualTransformation = VisualTransformation.None,
+                    interactionSource = remember { MutableInteractionSource() },
+                    container = {},
+                    contentPadding = PaddingValues(0.dp),
+                )
+            },
+        )
     }
 }
