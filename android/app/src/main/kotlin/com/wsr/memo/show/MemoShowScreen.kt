@@ -16,16 +16,23 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
@@ -48,6 +55,8 @@ internal fun MemoShowRoute(memoId: MemoResponseId) {
         onClickFabButton = presenter::onClickFabButton,
         onChangeItemTitle = presenter::onChangeItemTitle,
         onChangeItemChecked = presenter::onChangeItemChecked,
+        onClickItemDetail = presenter::onClickItemDetail,
+        onClickItemDelete = presenter::onClickItemDelete,
         detailBottomSheetListener = MemoShowDetailBottomSheetListener(
             onDismiss = presenter::onDismissDetailBottomSheet,
             onChangeTitle = presenter::onChangeDetailBottomSheetTitle,
@@ -63,6 +72,8 @@ private fun MemoShowScreen(
     onClickFabButton: () -> Unit,
     onChangeItemTitle: (id: ItemResponseId, title: String) -> Unit,
     onChangeItemChecked: (id: ItemResponseId, checked: Boolean) -> Unit,
+    onClickItemDetail: (itemId: ItemResponseId) -> Unit,
+    onClickItemDelete: (itemId: ItemResponseId) -> Unit,
     detailBottomSheetListener: MemoShowDetailBottomSheetListener,
 
 ) {
@@ -88,8 +99,10 @@ private fun MemoShowScreen(
             items(uiState.items) { item ->
                 ItemRow(
                     item = item,
-                    onChangeItemTitle = { onChangeItemTitle(item.id, it) },
-                    onChangeItemChecked = { onChangeItemChecked(item.id, it) },
+                    onChangeTitle = { onChangeItemTitle(item.id, it) },
+                    onChangeChecked = { onChangeItemChecked(item.id, it) },
+                    onClickDetail = { onClickItemDetail(item.id) },
+                    onClickDelete = { onClickItemDelete(item.id) },
                     modifier = Modifier.padding(vertical = 12.dp),
                 )
             }
@@ -109,10 +122,13 @@ private fun MemoShowScreen(
 @Composable
 private fun ItemRow(
     item: ItemResponse,
-    onChangeItemTitle: (title: String) -> Unit,
-    onChangeItemChecked: (checked: Boolean) -> Unit,
+    onChangeTitle: (title: String) -> Unit,
+    onChangeChecked: (checked: Boolean) -> Unit,
+    onClickDetail: () -> Unit,
+    onClickDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var expanded by remember { mutableStateOf(false) }
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -130,12 +146,12 @@ private fun ItemRow(
     ) {
         Checkbox(
             checked = item.checked,
-            onCheckedChange = { onChangeItemChecked(it) },
+            onCheckedChange = { onChangeChecked(it) },
         )
         Spacer(modifier = Modifier.width(8.dp))
         BasicTextField(
             value = item.title,
-            onValueChange = { onChangeItemTitle(it) },
+            onValueChange = { onChangeTitle(it) },
             modifier = Modifier
                 .weight(1f)
                 .fillMaxHeight(),
@@ -158,5 +174,30 @@ private fun ItemRow(
                 )
             },
         )
+        IconButton(onClick = { expanded = true }) {
+            Icon(
+                imageVector = Icons.Outlined.MoreVert,
+                contentDescription = null,
+            )
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+            ) {
+                DropdownMenuItem(
+                    text = { Text(text = "詳細") },
+                    onClick = {
+                        onClickDetail()
+                        expanded = false
+                    },
+                )
+                DropdownMenuItem(
+                    text = { Text(text = "削除する", color = MantraTheme.colors.Red80) },
+                    onClick = {
+                        onClickDelete()
+                        expanded = false
+                    },
+                )
+            }
+        }
     }
 }

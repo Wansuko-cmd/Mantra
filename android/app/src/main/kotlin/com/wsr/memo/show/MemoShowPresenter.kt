@@ -79,6 +79,26 @@ internal class MemoShowPresenter(
         }
     }
 
+    fun onClickItemDetail(id: ItemResponseId) {
+        val item = uiState.items.firstOrNull { it.id == id } ?: return
+        uiState = uiState.copy(
+            detailBottomSheet = MemoShowDetailBottomSheetUiState(
+                id = id,
+                title = item.title,
+                description = item.description,
+            ),
+        )
+    }
+
+    fun onClickItemDelete(id: ItemResponseId) {
+        scope.launch {
+            controller.removeItem(
+                memoId = memoId,
+                itemId = id,
+            )
+        }
+    }
+
     fun onDismissDetailBottomSheet() {
         val detailBottomSheet = uiState.detailBottomSheet
         if (detailBottomSheet != null) {
