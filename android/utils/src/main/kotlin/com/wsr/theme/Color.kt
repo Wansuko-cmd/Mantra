@@ -10,6 +10,7 @@ val MantraTheme.colorScheme
         onPrimary = PrimitiveColor.PrimaryGreen10,
         secondary = PrimitiveColor.SecondaryBeige50,
         onSecondary = PrimitiveColor.SecondaryBeige10,
+        primaryContainer = PrimitiveColor.PrimaryGreen30,
         background = PrimitiveColor.White100,
         surface = PrimitiveColor.PrimaryGreen40,
         onSurface = PrimitiveColor.Black100,
