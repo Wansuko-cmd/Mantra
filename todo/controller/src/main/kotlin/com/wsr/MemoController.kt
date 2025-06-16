@@ -10,7 +10,11 @@ class MemoController(private val productPath: (name: String) -> String) {
     private val memoStore = MemoStore(producePath = { productPath("memo") })
     private val repository = MemoRepositoryImpl(memoStore)
 
-    fun getAll(): Flow<List<MemoResponse>> = GetAllMemoUseCase(repository)
+    fun get(id: MemoResponseId): Flow<MemoResponse> = GetMemoUseCase(repository)
+        .invoke(id = MemoId(id.value))
+        .map { memo -> MemoResponse.from(memo) }
+
+    fun getAll(): Flow<List<MemoResponse>> = GetAllMemosUseCase(repository)
         .invoke()
         .map { memos -> memos.map { MemoResponse.from(it) } }
 
