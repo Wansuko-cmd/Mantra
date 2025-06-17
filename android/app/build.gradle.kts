@@ -44,4 +44,7 @@ dependencies {
 
     implementation(platform(libs.koin.bom))
     implementation(libs.bundles.koin)
+
+    implementation(libs.mcp)
+    implementation(libs.generative.ai)
 }
