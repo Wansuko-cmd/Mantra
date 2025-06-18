@@ -17,4 +17,7 @@ internal sealed interface Route {
             }
         }
     }
+
+    @Serializable
+    data object Assistant : Route
 }

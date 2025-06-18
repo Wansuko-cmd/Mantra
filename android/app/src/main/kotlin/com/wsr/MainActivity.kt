@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.wsr.assistant.AssistantRoute
 import com.wsr.memo.index.MemoIndexRoute
 import com.wsr.memo.show.MemoShowRoute
 import com.wsr.theme.MantraTheme
@@ -19,7 +20,7 @@ class MainActivity : ComponentActivity() {
                 val controller = rememberNavController()
                 NavHost(
                     navController = controller,
-                    startDestination = Route.Memo.Index,
+                    startDestination = Route.Assistant,
                 ) {
                     composable<Route.Memo.Index> {
                         MemoIndexRoute(
@@ -32,6 +33,9 @@ class MainActivity : ComponentActivity() {
                     composable<Route.Memo.Show> { backStackEntry ->
                         val memoId = backStackEntry.toRoute<Route.Memo.Show>().memoId
                         MemoShowRoute(memoId)
+                    }
+                    composable<Route.Assistant> {
+                        AssistantRoute()
                     }
                 }
             }
