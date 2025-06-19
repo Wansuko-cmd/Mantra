@@ -101,9 +101,11 @@ private fun Server.addMemoCreateTool(controller: MemoController): Server = this.
             properties = buildJsonObject {
                 putJsonObject("title") {
                     put("type", "string")
+                    put("description", "The title of memo you will create.")
                 }
                 putJsonObject("description") {
                     put("type", "string")
+                    put("description", "The description of memo you will create.")
                 }
             },
             required = listOf("title", "description"),

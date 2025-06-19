@@ -41,10 +41,11 @@ internal class AssistantPresenter(
     }
 
     fun onClickSend() {
+        val message = uiState.input
+        val history = uiState.messages
+        uiState = uiState.copy(input = "", messages = history + MessageUiState.User(message))
         scope.launch {
-            val message = uiState.input
-            val history = uiState.messages.map { it.toContent() }
-            val messages = ai.send(message = message, history = history)
+            val messages = ai.send(message = message, history = history.map { it.toContent() })
             uiState = uiState.copy(input = "", messages = messages.map { MessageUiState.from(it) })
         }
     }
