@@ -5,9 +5,9 @@ import dev.shreyaspatil.ai.client.generativeai.type.FunctionDeclaration
 import dev.shreyaspatil.ai.client.generativeai.type.FunctionType
 import dev.shreyaspatil.ai.client.generativeai.type.Schema
 import dev.shreyaspatil.ai.client.generativeai.type.Tool
-import io.modelcontextprotocol.kotlin.sdk.CallToolResultBase
 import io.modelcontextprotocol.kotlin.sdk.Implementation
 import io.modelcontextprotocol.kotlin.sdk.ListToolsResult
+import io.modelcontextprotocol.kotlin.sdk.TextContent
 import io.modelcontextprotocol.kotlin.sdk.client.Client
 import io.modelcontextprotocol.kotlin.sdk.shared.Transport
 
@@ -18,10 +18,22 @@ class McpClient private constructor(
     val client: Client,
     val tools: List<Tool>,
 ) {
-    suspend fun callTool(part: FunctionCallPart): CallToolResultBase? = client.callTool(
-        name = part.name,
-        arguments = part.args.orEmpty(),
-    )
+    suspend fun callTool(part: FunctionCallPart): String =
+        client
+            .callTool(
+                name = part.name,
+                arguments = part.args.orEmpty(),
+            )
+            ?.let { result ->
+                val content = result.content
+                    .joinToString("\n") { (it as TextContent).text ?: "" }
+                """
+                    "type": "tool_result",
+                    "tool_name": ${part.name},
+                    "result": $content
+                """.trimIndent()
+            }
+            .orEmpty()
 
     companion object {
         suspend fun connect(transport: Transport): McpClient {

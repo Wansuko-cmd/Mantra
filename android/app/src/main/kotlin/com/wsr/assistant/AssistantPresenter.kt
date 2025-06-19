@@ -1,28 +1,52 @@
 package com.wsr.assistant
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import com.wsr.MemoController
 import com.wsr.Presenter
 import com.wsr.UiEvent
 import com.wsr.UiState
+import com.wsr.setUpMcpServer
 import io.github.takahirom.rin.rememberRetained
+import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 @Composable
-internal fun rememberAssistantPresenter(): AssistantPresenter {
+internal fun rememberAssistantPresenter(
+    controller: MemoController = koinInject(),
+): AssistantPresenter {
     val presenter = rememberRetained {
-        AssistantPresenter()
+        AssistantPresenter(controller = controller)
+    }
+    LaunchedEffect(presenter) {
+        presenter.initialize()
     }
     return presenter
 }
 
-internal class AssistantPresenter : Presenter<AssistantUiState, UiEvent>(AssistantUiState()) {
+internal class AssistantPresenter(
+    private val controller: MemoController,
+) : Presenter<AssistantUiState, UiEvent>(AssistantUiState()) {
+
+    private lateinit var ai: AI
+
+    suspend fun initialize() {
+        val transport = setUpMcpServer(controller)
+        val client = McpClient.connect(transport)
+        ai = AI(client)
+    }
+
     fun onChangeInput(input: String) {
         uiState = uiState.copy(input = input)
     }
 
     fun onClickSend() {
-        val message = MessageUiState.User(uiState.input)
-        uiState = uiState.copy(messages = uiState.messages + message)
-        uiState = uiState.copy(input = "")
+        scope.launch {
+            val message = uiState.input
+            val history = uiState.messages.map { it.toContent() }
+            val messages = ai.send(message = message, history = history)
+            uiState = uiState.copy(input = "", messages = messages.map { MessageUiState.from(it) })
+        }
     }
 }
 
@@ -32,7 +56,30 @@ internal data class AssistantUiState(
 ) : UiState
 
 internal sealed interface MessageUiState {
-    data class User(val text: String) : MessageUiState
-    data class Tool(val text: String) : MessageUiState
-    data class AI(val text: String) : MessageUiState
+    fun toContent(): Content
+
+    data class User(val text: String) : MessageUiState {
+        override fun toContent(): Content = Content(role = Role.User, part = Part.Text(text))
+    }
+
+    data class Tool(val text: String) : MessageUiState {
+        override fun toContent(): Content = Content(role = Role.Tool, part = Part.Text(text))
+    }
+
+    data class AI(val text: String) : MessageUiState {
+        override fun toContent(): Content = Content(role = Role.AI, part = Part.Text(text))
+    }
+
+    companion object {
+        fun from(content: Content): MessageUiState {
+            val part = when (content.part) {
+                is Part.Text -> content.part.value
+            }
+            return when (content.role) {
+                is Role.User -> User(part)
+                is Role.Tool -> Tool(part)
+                is Role.AI -> AI(part)
+            }
+        }
+    }
 }
