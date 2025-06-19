@@ -15,11 +15,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,22 +35,38 @@ import com.wsr.theme.colors
 import com.wsr.theme.shape
 
 @Composable
-internal fun AssistantRoute() {
+internal fun AssistantRoute(navigateToMemoIndex: () -> Unit) {
     val presenter = rememberAssistantPresenter()
     AssistantScreen(
         uiState = presenter.uiState,
+        onClickMemo = navigateToMemoIndex,
         onChangeInput = presenter::onChangeInput,
         onClickSend = presenter::onClickSend,
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AssistantScreen(
     uiState: AssistantUiState,
+    onClickMemo: () -> Unit,
     onChangeInput: (String) -> Unit,
     onClickSend: () -> Unit,
 ) {
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("アシスタント面") },
+                actions = {
+                    IconButton(onClick = onClickMemo) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.List,
+                            contentDescription = null,
+                        )
+                    }
+                },
+            )
+        },
         bottomBar = {
             AssistantBottomBar(
                 input = uiState.input,
@@ -55,7 +74,6 @@ private fun AssistantScreen(
                 onClickSend = onClickSend,
             )
         },
-        modifier = Modifier.systemBarsPadding(),
     ) { innerPadding ->
         LazyColumn(
             reverseLayout = true,

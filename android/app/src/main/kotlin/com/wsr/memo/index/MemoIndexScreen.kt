@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.DropdownMenu
@@ -36,10 +37,14 @@ import com.wsr.theme.colors
 import com.wsr.theme.shape
 
 @Composable
-internal fun MemoIndexRoute(navigateToShow: (MemoResponseId) -> Unit) {
+internal fun MemoIndexRoute(
+    navigateToAssistant: () -> Unit,
+    navigateToShow: (MemoResponseId) -> Unit,
+) {
     val presenter = rememberMemoIndexPresenter()
     MemoIndexScreen(
         uiState = presenter.uiState,
+        onClickAssistant = navigateToAssistant,
         onClickFabButton = presenter::onClickFabButton,
         onClickMemo = navigateToShow,
         onClickMemoDetail = presenter::onClickMemoDetail,
@@ -62,6 +67,7 @@ internal fun MemoIndexRoute(navigateToShow: (MemoResponseId) -> Unit) {
 @Composable
 private fun MemoIndexScreen(
     uiState: MemoIndexUiState,
+    onClickAssistant: () -> Unit,
     onClickFabButton: () -> Unit,
     onClickMemo: (memoId: MemoResponseId) -> Unit,
     onClickMemoDetail: (memoId: MemoResponseId) -> Unit,
@@ -71,7 +77,17 @@ private fun MemoIndexScreen(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(text = "メモ一覧") })
+            TopAppBar(
+                title = { Text(text = "メモ一覧") },
+                actions = {
+                    IconButton(onClick = onClickAssistant) {
+                        Icon(
+                            imageVector = Icons.Default.AccountCircle,
+                            contentDescription = null,
+                        )
+                    }
+                },
+            )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onClickFabButton) {

@@ -1,11 +1,13 @@
 package com.wsr.assistant
 
+import com.wsr.MemoController
+import com.wsr.setUpMcpServer
 import dev.shreyaspatil.ai.client.generativeai.GenerativeModel
 import dev.shreyaspatil.ai.client.generativeai.type.FunctionCallPart
 import dev.shreyaspatil.ai.client.generativeai.type.TextPart
 import dev.shreyaspatil.ai.client.generativeai.type.content
 
-class AI(private val client: McpClient) {
+class Assistant private constructor(private val client: McpClient) {
     private val model = GenerativeModel(
         modelName = "gemini-2.0-flash",
         apiKey = "",
@@ -46,6 +48,16 @@ class AI(private val client: McpClient) {
         val result = client.callTool(this)
         val response = Content(role = Role.Tool, part = Part.Text(result))
         return listOf(request, response)
+    }
+
+    companion object {
+        private var instance: Assistant? = null
+        suspend fun create(controller: MemoController): Assistant =
+            instance ?: run {
+                val transport = setUpMcpServer(controller)
+                val client = McpClient.connect(transport)
+                Assistant(client).also { instance = it }
+            }
     }
 }
 

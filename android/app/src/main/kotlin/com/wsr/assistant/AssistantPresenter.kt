@@ -6,7 +6,6 @@ import com.wsr.MemoController
 import com.wsr.Presenter
 import com.wsr.UiEvent
 import com.wsr.UiState
-import com.wsr.setUpMcpServer
 import io.github.takahirom.rin.rememberRetained
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -28,12 +27,10 @@ internal class AssistantPresenter(
     private val controller: MemoController,
 ) : Presenter<AssistantUiState, UiEvent>(AssistantUiState()) {
 
-    private lateinit var ai: AI
+    private lateinit var assistant: Assistant
 
     suspend fun initialize() {
-        val transport = setUpMcpServer(controller)
-        val client = McpClient.connect(transport)
-        ai = AI(client)
+        assistant = Assistant.create(controller)
     }
 
     fun onChangeInput(input: String) {
@@ -45,7 +42,7 @@ internal class AssistantPresenter(
         val history = uiState.messages
         uiState = uiState.copy(input = "", messages = history + MessageUiState.User(message))
         scope.launch {
-            val messages = ai.send(message = message, history = history.map { it.toContent() })
+            val messages = assistant.send(message = message, history = history.map { it.toContent() })
             uiState = uiState.copy(input = "", messages = messages.map { MessageUiState.from(it) })
         }
     }
