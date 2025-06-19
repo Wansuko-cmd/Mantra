@@ -75,6 +75,12 @@ private fun AssistantScreen(
                             modifier = Modifier.align(Alignment.CenterEnd),
                         )
 
+                        is MessageUiState.Tool -> Bubble(
+                            text = message.text,
+                            color = MantraTheme.colors.FieldBeige20,
+                            modifier = Modifier.align(Alignment.Center),
+                        )
+
                         is MessageUiState.AI -> Bubble(
                             text = message.text,
                             color = MantraTheme.colors.Black20,

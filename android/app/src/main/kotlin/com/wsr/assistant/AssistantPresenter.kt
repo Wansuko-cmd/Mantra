@@ -33,5 +33,6 @@ internal data class AssistantUiState(
 
 internal sealed interface MessageUiState {
     data class User(val text: String) : MessageUiState
+    data class Tool(val text: String) : MessageUiState
     data class AI(val text: String) : MessageUiState
 }
