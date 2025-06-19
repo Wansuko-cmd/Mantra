@@ -1,10 +1,10 @@
 package com.wsr.assistant
 
-import com.google.ai.client.generativeai.type.FunctionCallPart
-import com.google.ai.client.generativeai.type.FunctionDeclaration
-import com.google.ai.client.generativeai.type.FunctionType
-import com.google.ai.client.generativeai.type.Schema
-import com.google.ai.client.generativeai.type.Tool
+import dev.shreyaspatil.ai.client.generativeai.type.FunctionCallPart
+import dev.shreyaspatil.ai.client.generativeai.type.FunctionDeclaration
+import dev.shreyaspatil.ai.client.generativeai.type.FunctionType
+import dev.shreyaspatil.ai.client.generativeai.type.Schema
+import dev.shreyaspatil.ai.client.generativeai.type.Tool
 import io.modelcontextprotocol.kotlin.sdk.CallToolResultBase
 import io.modelcontextprotocol.kotlin.sdk.Implementation
 import io.modelcontextprotocol.kotlin.sdk.ListToolsResult
@@ -20,7 +20,7 @@ class McpClient private constructor(
 ) {
     suspend fun callTool(part: FunctionCallPart): CallToolResultBase? = client.callTool(
         name = part.name,
-        arguments = part.args,
+        arguments = part.args.orEmpty(),
     )
 
     companion object {

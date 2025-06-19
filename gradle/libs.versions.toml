@@ -21,7 +21,7 @@ compose-rin = "0.3.0"
 koin = "4.1.0"
 
 # Gemini
-generative-ai = "0.9.0"
+generative-ai = "0.9.0-1.1.0"
 
 # DataStore
 datastore = "1.1.7"
@@ -64,7 +64,7 @@ koin-android = { group = "io.insert-koin", name = "koin-android" }
 koin-compose = { group = "io.insert-koin", name = "koin-compose" }
 
 # Gemini
-generative-ai = { group = "com.google.ai.client.generativeai", name = "generativeai", version.ref = "generative-ai" }
+generative-ai = { group = "dev.shreyaspatil.generativeai", name = "generativeai-google", version.ref = "generative-ai" }
 
 # DataStore
 datastore-core-okio = { group = "androidx.datastore", name = "datastore-core-okio", version.ref = "datastore" }
