@@ -27,6 +27,7 @@ import java.net.Socket
 
 private const val LOCAL_HOST = "127.0.0.1"
 private const val PORT = 12345
+private val serverSocket = ServerSocket(PORT)
 
 suspend fun setUpMcpServer(controller: MemoController): Transport {
     val (serverTransport, clientTransport) = createTransports()
@@ -43,7 +44,7 @@ suspend fun setUpMcpServer(controller: MemoController): Transport {
 private suspend fun createTransports(): Pair<StdioServerTransport, StdioClientTransport> =
     withContext(Dispatchers.Default) {
         val server = async {
-            ServerSocket(PORT).accept().let { socket ->
+            serverSocket.accept().let { socket ->
                 StdioServerTransport(
                     inputStream = socket.inputStream.asInput(),
                     outputStream = socket.outputStream.asSink().buffered(),
