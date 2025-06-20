@@ -1,6 +1,5 @@
 package com.wsr.assistant
 
-import android.util.Log
 import dev.shreyaspatil.ai.client.generativeai.type.FunctionCallPart
 import dev.shreyaspatil.ai.client.generativeai.type.FunctionDeclaration
 import dev.shreyaspatil.ai.client.generativeai.type.Schema
@@ -10,14 +9,9 @@ import io.modelcontextprotocol.kotlin.sdk.ListToolsResult
 import io.modelcontextprotocol.kotlin.sdk.TextContent
 import io.modelcontextprotocol.kotlin.sdk.client.Client
 import io.modelcontextprotocol.kotlin.sdk.shared.Transport
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.booleanOrNull
-import kotlinx.serialization.json.doubleOrNull
-import kotlinx.serialization.json.intOrNull
-import kotlinx.serialization.json.longOrNull
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 private const val MCP_CLIENT_NAME = "mcp-client"
 private const val MCP_CLIENT_VERSION = "1.0.0"
@@ -65,33 +59,44 @@ private fun ListToolsResult.toTools(): List<Tool> {
             name = tool.name,
             description = tool.description.orEmpty(),
             parameters = tool.inputSchema.properties
-                .map { (name, element) -> element.toSchema(name) },
+                .map { (name, element) -> element.jsonObject.toSchema(name) },
             requiredParameters = tool.inputSchema.required.orEmpty(),
         )
     }
     return listOf(Tool(functionDeclarations = declarations))
 }
 
-// Please explain what kind of memos are there?
-private fun JsonElement.toSchema(name: String): Schema<out Any> = when (this) {
-    is JsonObject -> Schema.obj(
-        name = name,
-        description = "",
-        contents = entries.map { (name, element) -> element.toSchema(name) }.toTypedArray(),
-    ).also { Log.d("Here", "obj") }
+private fun JsonObject.toSchema(name: String): Schema<out Any> =
+    when (val type = jsonObject["type"]!!.jsonPrimitive.content) {
+        "object" -> {
+            val properties = jsonObject["properties"]!!.jsonObject
+            Schema.obj(
+                name = name,
+                description = "",
+                contents = properties
+                    .map { (name, element) -> element.jsonObject.toSchema(name) }
+                    .toTypedArray(),
+            )
+        }
 
-    is JsonArray -> Schema.arr(
-        name = name,
-        description = "",
-        items = this.first().toSchema(""),
-    ).also { Log.d("Here", "arr") }
+        "array" -> {
+            val items = jsonObject["items"]!!.jsonObject
+            Schema.arr(
+                name = name,
+                description = "",
+                items = items.toSchema("items"),
+            )
+        }
 
-    is JsonPrimitive -> when {
-        isString -> Schema.str(name = name, description = content)
-        booleanOrNull != null -> Schema.bool(name = name, description = content)
-        intOrNull != null -> Schema.int(name = name, description = content)
-        longOrNull != null -> Schema.long(name = name, description = content)
-        doubleOrNull != null -> Schema.double(name = name, description = content)
-        else -> Schema.str(name = name, description = content)
-    }.also { Log.d("Here", "pri") }
-}
+        else -> {
+            val description = jsonObject["description"]?.jsonPrimitive?.content.orEmpty()
+            when (type) {
+                "string" -> Schema.str(name, description)
+                "integer" -> Schema.int(name, description)
+                "long" -> Schema.long(name, description)
+                "double" -> Schema.double(name, description)
+                "bool" -> Schema.bool(name, description)
+                else -> throw IllegalStateException("$type is not valid type at Json.")
+            }
+        }
+    }
