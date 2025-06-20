@@ -1,14 +1,10 @@
 package com.wsr.assistant
 
-data class Content(
-    val role: Role,
-    val part: Part,
-)
-
-sealed interface Role {
-    data object User : Role
-    data object Tool : Role
-    data object AI : Role
+sealed interface Content {
+    val part: Part
+    data class User(override val part: Part) : Content
+    data class Tool(override val part: Part) : Content
+    data class AI(override val part: Part) : Content
 }
 
 sealed interface Part {

@@ -57,26 +57,26 @@ internal sealed interface MessageUiState {
     fun toContent(): Content
 
     data class User(val text: String) : MessageUiState {
-        override fun toContent(): Content = Content(role = Role.User, part = Part.Text(text))
+        override fun toContent(): Content = Content.User(part = Part.Text(text))
     }
 
     data class Tool(val text: String) : MessageUiState {
-        override fun toContent(): Content = Content(role = Role.Tool, part = Part.Text(text))
+        override fun toContent(): Content = Content.Tool(part = Part.Text(text))
     }
 
     data class AI(val text: String) : MessageUiState {
-        override fun toContent(): Content = Content(role = Role.AI, part = Part.Text(text))
+        override fun toContent(): Content = Content.AI(part = Part.Text(text))
     }
 
     companion object {
         fun from(content: Content): MessageUiState {
             val part = when (content.part) {
-                is Part.Text -> content.part.value
+                is Part.Text -> (content.part as Part.Text).value
             }
-            return when (content.role) {
-                is Role.User -> User(part)
-                is Role.Tool -> Tool(part)
-                is Role.AI -> AI(part)
+            return when (content) {
+                is Content.User -> User(part)
+                is Content.Tool -> Tool(part)
+                is Content.AI -> AI(part)
             }
         }
     }

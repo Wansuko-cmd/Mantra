@@ -54,7 +54,7 @@ class Assistant private constructor(private val client: McpClient) {
     )
 
     suspend fun send(message: String, history: List<Content> = emptyList()): List<Content> {
-        val content = Content(role = Role.User, part = Part.Text(message))
+        val content = Content.User(part = Part.Text(message))
         return send(content, history)
     }
 
@@ -72,20 +72,18 @@ class Assistant private constructor(private val client: McpClient) {
                 )
             }
 
-            else -> history + content + Content(
-                role = Role.AI,
+            else -> history + content + Content.AI(
                 part = Part.Text(response.text.orEmpty()),
             )
         }
     }
 
     private suspend fun FunctionCallPart.call(): List<Content> {
-        val request = Content(
-            role = Role.AI,
+        val request = Content.AI(
             part = Part.Text("[Calling tool $name with args $args]"),
         )
         val result = client.callTool(this)
-        val response = Content(role = Role.Tool, part = Part.Text(result))
+        val response = Content.Tool(part = Part.Text(result))
         return listOf(request, response)
     }
 
@@ -100,10 +98,10 @@ class Assistant private constructor(private val client: McpClient) {
     }
 }
 
-private fun Content.toGeminiContent() = when (role) {
-    is Role.User -> content(role = "user") { part(part.toGeminiPart()) }
-    is Role.Tool -> content(role = "user") { part(part.toGeminiPart()) }
-    is Role.AI -> content(role = "model") { part(part.toGeminiPart()) }
+private fun Content.toGeminiContent() = when (this) {
+    is Content.User -> content(role = "user") { part(part.toGeminiPart()) }
+    is Content.Tool -> content(role = "user") { part(part.toGeminiPart()) }
+    is Content.AI -> content(role = "model") { part(part.toGeminiPart()) }
 }
 
 private fun Part.toGeminiPart() = when (this) {
