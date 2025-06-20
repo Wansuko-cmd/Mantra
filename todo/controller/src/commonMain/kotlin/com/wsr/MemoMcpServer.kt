@@ -32,9 +32,10 @@ private val serverSocket = ServerSocket(PORT)
 suspend fun setUpMcpServer(controller: MemoController): Transport {
     val (serverTransport, clientTransport) = createTransports()
 
-    val server = createServer()
-        .addMemoReadTool(controller)
-        .addMemoCreateTool(controller)
+    val server = createServer().apply {
+        getMemosTool(controller)
+        createMemoTool(controller)
+    }
 
     server.connect(serverTransport)
 
@@ -70,33 +71,54 @@ private fun createServer() = Server(
     ),
     options = ServerOptions(
         capabilities = ServerCapabilities(
-            resources = ServerCapabilities.Resources(
-                subscribe = true,
-                listChanged = true,
-            ),
+            prompts = ServerCapabilities.Prompts(listChanged = true),
             tools = ServerCapabilities.Tools(listChanged = true),
         ),
     ),
 )
 
-private fun Server.addMemoReadTool(controller: MemoController): Server = this.apply {
+private fun Server.getMemosTool(controller: MemoController): Server = this.apply {
     addTool(
-        name = "read_memo",
+        name = "get_memos",
         description = """
-            Return all registered memos which bundle some todos.
+            登録されている全てのメモを返します
         """.trimIndent(),
         inputSchema = Tool.Input(),
     ) { _ ->
         val memos = controller.getAll().first()
-        CallToolResult(content = memos.map { memo -> TextContent(memo.toString()) })
+        CallToolResult(
+            content = memos.map { memo ->
+                val items = memo.items.joinToString("\n") { item ->
+                    """
+                    {
+                        title: ${item.title},
+                        description: ${item.description},
+                        checked: ${item.description}
+                    }
+                    """.trimIndent()
+                }
+                TextContent(
+                    """
+                    {
+                        id: ${memo.id},
+                        title: ${memo.title},
+                        description: ${memo.description},
+                        items: {
+                            $items
+                        }
+                    }
+                    """.trimIndent(),
+                )
+            },
+        )
     }
 }
 
-private fun Server.addMemoCreateTool(controller: MemoController): Server = this.apply {
+private fun Server.createMemoTool(controller: MemoController): Server = this.apply {
     addTool(
         name = "create_memo",
         description = """
-            Create Memo which bundle some todos.
+            新たなメモを作成します
         """.trimIndent(),
         inputSchema = Tool.Input(
             properties = buildJsonObject {
@@ -120,7 +142,7 @@ private fun Server.addMemoCreateTool(controller: MemoController): Server = this.
                 description = description,
             )
             CallToolResult(
-                content = listOf(TextContent("success.")),
+                content = listOf(TextContent("作成しました")),
             )
         } else {
             CallToolResult(
