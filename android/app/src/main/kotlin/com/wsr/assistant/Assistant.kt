@@ -1,7 +1,7 @@
 package com.wsr.assistant
 
 import com.wsr.MemoController
-import com.wsr.setUpMcpServer
+import com.wsr.mcp.setUpMcpServer
 import dev.shreyaspatil.ai.client.generativeai.GenerativeModel
 import dev.shreyaspatil.ai.client.generativeai.type.FunctionCallPart
 import dev.shreyaspatil.ai.client.generativeai.type.TextPart
