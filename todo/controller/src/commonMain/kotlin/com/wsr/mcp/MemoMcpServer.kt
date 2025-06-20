@@ -26,6 +26,7 @@ suspend fun setUpMcpServer(controller: MemoController): Transport {
 
     val server = createServer()
         .applyMemoTools(controller)
+        .applyMemoItemTools(controller)
 
     server.connect(serverTransport)
 
