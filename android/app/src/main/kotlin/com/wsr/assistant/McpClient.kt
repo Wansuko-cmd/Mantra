@@ -27,13 +27,8 @@ class McpClient private constructor(
             )
         val content = result?.content?.joinToString("\n") { (it as TextContent).text.orEmpty() }
         return Content.Tool(
-            part = Part.Text(
-                """
-                    "type": "tool_result",
-                    "tool_name": ${part.name},
-                    "result": $content
-                """.trimIndent(),
-            ),
+            name = part.name,
+            result = content.orEmpty(),
         )
     }
 

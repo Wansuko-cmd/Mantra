@@ -27,7 +27,7 @@ class Assistant private constructor(private val client: McpClient) {
                 まとめられているTODOの共通点を元にしてタイトルおよび説明文を決定します
                 
                 ** 要素 **
-                id -> メモの識別子
+                id -> メモの識別子(TODOを作成する際にのみ利用する)
                 title -> メモのタイトル
                 description -> メモの説明文
                 
@@ -48,9 +48,9 @@ class Assistant private constructor(private val client: McpClient) {
                 メモとTODOは一対多の関係にあります
                 
                 これらの内容を元に、話を聞きながらメモ帳を整理していきましょう
-            """
+            """,
             )
-        }
+        },
     )
 
     suspend fun send(message: String, history: List<Content> = emptyList()): List<Content> {
@@ -80,7 +80,7 @@ class Assistant private constructor(private val client: McpClient) {
 
     private suspend fun FunctionCallPart.call(): List<Content> {
         val request = Content.AI(
-            part = Part.Text("[Calling tool $name with args $args]"),
+            part = Part.Text("${name}を呼び出し $args"),
         )
         val response = client.callTool(this)
         return listOf(request, response)

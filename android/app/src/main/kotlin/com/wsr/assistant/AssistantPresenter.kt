@@ -60,8 +60,8 @@ internal sealed interface MessageUiState {
         override fun toContent(): Content = Content.User(part = Part.Text(text))
     }
 
-    data class Tool(val text: String) : MessageUiState {
-        override fun toContent(): Content = Content.Tool(part = Part.Text(text))
+    data class Tool(val name: String, val result: String) : MessageUiState {
+        override fun toContent(): Content = Content.Tool(name = name, result = result)
     }
 
     data class AI(val text: String) : MessageUiState {
@@ -75,7 +75,7 @@ internal sealed interface MessageUiState {
             }
             return when (content) {
                 is Content.User -> User(part)
-                is Content.Tool -> Tool(part)
+                is Content.Tool -> Tool(content.name, content.result)
                 is Content.AI -> AI(part)
             }
         }

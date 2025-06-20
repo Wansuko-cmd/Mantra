@@ -95,7 +95,7 @@ private fun AssistantScreen(
                         )
 
                         is MessageUiState.Tool -> Bubble(
-                            text = message.text,
+                            text = "${message.name}を使用",
                             color = MantraTheme.colors.FieldBeige20,
                             modifier = Modifier.align(Alignment.Center),
                         )
