@@ -20,22 +20,22 @@ class McpClient private constructor(
     val client: Client,
     val tools: List<Tool>,
 ) {
-    suspend fun callTool(part: FunctionCallPart): String =
-        client
-            .callTool(
+    suspend fun callTool(part: FunctionCallPart): Content.Tool {
+        val result = client.callTool(
                 name = part.name,
                 arguments = part.args.orEmpty(),
             )
-            ?.let { result ->
-                val content = result.content
-                    .joinToString("\n") { (it as TextContent).text ?: "" }
+        val content = result?.content?.joinToString("\n") { (it as TextContent).text.orEmpty() }
+        return Content.Tool(
+            part = Part.Text(
                 """
                     "type": "tool_result",
                     "tool_name": ${part.name},
                     "result": $content
-                """.trimIndent()
-            }
-            .orEmpty()
+                """.trimIndent(),
+            ),
+        )
+    }
 
     companion object {
         suspend fun connect(transport: Transport): McpClient {

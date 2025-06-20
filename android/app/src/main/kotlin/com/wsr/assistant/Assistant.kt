@@ -82,8 +82,7 @@ class Assistant private constructor(private val client: McpClient) {
         val request = Content.AI(
             part = Part.Text("[Calling tool $name with args $args]"),
         )
-        val result = client.callTool(this)
-        val response = Content.Tool(part = Part.Text(result))
+        val response = client.callTool(this)
         return listOf(request, response)
     }
 
