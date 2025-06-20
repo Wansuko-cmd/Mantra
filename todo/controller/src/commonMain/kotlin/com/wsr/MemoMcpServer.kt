@@ -83,7 +83,7 @@ private fun Server.addMemoReadTool(controller: MemoController): Server = this.ap
     addTool(
         name = "read_memo",
         description = """
-            Read Memos which bundle some todos.
+            Return all registered memos which bundle some todos.
         """.trimIndent(),
         inputSchema = Tool.Input(),
     ) { _ ->
