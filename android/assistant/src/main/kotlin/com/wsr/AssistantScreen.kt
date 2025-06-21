@@ -21,7 +21,7 @@ fun AssistantScreen() {
             ChatScreen(navigateToSetting = { controller.navigate(AssistantRoute.Setting) })
         }
         composable<AssistantRoute.Setting> {
-            SettingScreen()
+            SettingScreen(onBackPress = controller::popBackStack)
         }
     }
 
