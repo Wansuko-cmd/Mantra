@@ -4,8 +4,7 @@ class CreateMemoUseCase(private val repository: MemoRepository) {
     suspend operator fun invoke(
         title: String,
         description: String,
-    ) {
-        val memo = Memo.create(title = title, description = description)
-        repository.create(memo)
-    }
+    ): Memo = Memo
+        .create(title = title, description = description)
+        .also { repository.create(it) }
 }

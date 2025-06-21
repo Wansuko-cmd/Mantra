@@ -1,5 +1,7 @@
 package com.wsr.item
 
+import com.wsr.Item
+import com.wsr.Memo
 import com.wsr.MemoId
 import com.wsr.MemoRepository
 import kotlinx.coroutines.flow.first
@@ -9,9 +11,10 @@ class AddItemUseCase(private val repository: MemoRepository) {
         id: MemoId,
         title: String,
         description: String,
-    ) {
+    ): Memo {
         val memo = repository.get(id).first()
-        val newMemo = memo.addItem(title = title, description = description)
-        repository.update(newMemo)
+        return memo
+            .addItem(title = title, description = description)
+            .also { repository.update(it) }
     }
 }

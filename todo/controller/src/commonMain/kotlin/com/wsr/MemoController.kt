@@ -18,40 +18,47 @@ class MemoController(private val productPath: (name: String) -> String) {
         .invoke()
         .map { memos -> memos.map { MemoResponse.from(it) } }
 
-    suspend fun create(title: String, description: String) {
-        CreateMemoUseCase(repository)
+    suspend fun create(
+        title: String,
+        description: String,
+    ): MemoResponse {
+        return CreateMemoUseCase(repository)
             .invoke(title = title, description = description)
+            .let { MemoResponse.from(it) }
     }
 
     suspend fun update(
         id: MemoResponseId,
         title: String,
         description: String,
-    ) {
-        UpdateMemoUseCase(repository)
+    ): MemoResponse {
+        return UpdateMemoUseCase(repository)
             .invoke(
                 id = MemoId(id.value),
                 title = title,
                 description = description,
             )
+            .let { MemoResponse.from(it) }
     }
 
-    suspend fun delete(id: MemoResponseId) {
-        DeleteMemoUseCase(repository)
+    suspend fun delete(id: MemoResponseId): MemoResponseId {
+        return DeleteMemoUseCase(repository)
             .invoke(id = MemoId(id.value))
+            .let { MemoResponseId(it.value) }
     }
 
     suspend fun addItem(
         id: MemoResponseId,
         title: String,
         description: String,
-    ) {
-        AddItemUseCase(repository)
+    ): MemoResponse {
+        return AddItemUseCase(repository)
             .invoke(
                 id = MemoId(id.value),
                 title = title,
                 description = description,
             )
+            .let { MemoResponse.from(it) }
     }
 
     suspend fun updateItem(
@@ -60,8 +67,8 @@ class MemoController(private val productPath: (name: String) -> String) {
         title: String? = null,
         description: String? = null,
         checked: Boolean? = null,
-    ) {
-        UpdateItemUseCase(repository)
+    ): MemoResponse {
+        return UpdateItemUseCase(repository)
             .invoke(
                 memoId = MemoId(memoId.value),
                 itemId = ItemId(itemId.value),
@@ -69,16 +76,18 @@ class MemoController(private val productPath: (name: String) -> String) {
                 description = description,
                 checked = checked,
             )
+            .let { MemoResponse.from(it) }
     }
 
     suspend fun removeItem(
         memoId: MemoResponseId,
         itemId: ItemResponseId,
-    ) {
-        RemoveItemUseCase(repository)
+    ): MemoResponse {
+        return RemoveItemUseCase(repository)
             .invoke(
                 memoId = MemoId(memoId.value),
                 itemId = ItemId(itemId.value),
             )
+            .let { MemoResponse.from(it) }
     }
 }
