@@ -1,7 +1,6 @@
 package com.wsr.memo.show
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import com.wsr.ItemResponse
 import com.wsr.ItemResponseId
 import com.wsr.MemoController
@@ -9,7 +8,7 @@ import com.wsr.MemoResponseId
 import com.wsr.Presenter
 import com.wsr.UiEvent
 import com.wsr.UiState
-import io.github.takahirom.rin.rememberRetained
+import com.wsr.rememberPresenter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -19,24 +18,19 @@ import org.koin.compose.koinInject
 internal fun rememberMemoShowPresenter(
     memoId: MemoResponseId,
     controller: MemoController = koinInject(),
-): MemoShowPresenter {
-    val presenter = rememberRetained {
-        MemoShowPresenter(
-            memoId = memoId,
-            controller = controller,
-        )
-    }
-    LaunchedEffect(presenter) {
-        presenter.initialize()
-    }
-    return presenter
+): MemoShowPresenter = rememberPresenter {
+    MemoShowPresenter(
+        memoId = memoId,
+        controller = controller,
+    )
 }
 
 internal class MemoShowPresenter(
     private val memoId: MemoResponseId,
     private val controller: MemoController,
 ) : Presenter<MemoShowUiState, UiEvent>(MemoShowUiState()) {
-    fun initialize() {
+    override fun onRemembered() {
+        super.onRemembered()
         controller.get(memoId)
             .onEach { memo ->
                 uiState = MemoShowUiState(

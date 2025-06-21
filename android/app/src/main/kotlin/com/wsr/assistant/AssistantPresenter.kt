@@ -1,26 +1,19 @@
 package com.wsr.assistant
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import com.wsr.MemoController
 import com.wsr.Presenter
 import com.wsr.UiEvent
 import com.wsr.UiState
-import io.github.takahirom.rin.rememberRetained
+import com.wsr.rememberPresenter
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 @Composable
 internal fun rememberAssistantPresenter(
     controller: MemoController = koinInject(),
-): AssistantPresenter {
-    val presenter = rememberRetained {
-        AssistantPresenter(controller = controller)
-    }
-    LaunchedEffect(presenter) {
-        presenter.initialize()
-    }
-    return presenter
+): AssistantPresenter = rememberPresenter {
+    AssistantPresenter(controller = controller)
 }
 
 internal class AssistantPresenter(
@@ -29,8 +22,11 @@ internal class AssistantPresenter(
 
     private lateinit var assistant: Assistant
 
-    suspend fun initialize() {
-        assistant = Assistant.create(controller)
+    override fun onRemembered() {
+        super.onRemembered()
+        scope.launch {
+            assistant = Assistant.create(controller)
+        }
     }
 
     fun onChangeInput(input: String) {
