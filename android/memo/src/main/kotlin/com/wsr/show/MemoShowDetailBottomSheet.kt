@@ -1,4 +1,4 @@
-package com.wsr.memo.index
+package com.wsr.show
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,9 +15,9 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun MemoIndexDetailBottomSheet(
-    uiState: MemoIndexDetailBottomSheetUiState,
-    listener: MemoIndexDetailBottomSheetListener,
+internal fun MemoShowDetailBottomSheet(
+    uiState: MemoShowDetailBottomSheetUiState,
+    listener: MemoShowDetailBottomSheetListener,
 ) {
     ModalBottomSheet(onDismissRequest = listener.onDismiss) {
         Column(modifier = Modifier.padding(vertical = 16.dp, horizontal = 32.dp)) {
@@ -38,7 +38,7 @@ internal fun MemoIndexDetailBottomSheet(
     }
 }
 
-data class MemoIndexDetailBottomSheetListener(
+internal data class MemoShowDetailBottomSheetListener(
     val onDismiss: () -> Unit,
     val onChangeTitle: (String) -> Unit,
     val onChangeDescription: (String) -> Unit,

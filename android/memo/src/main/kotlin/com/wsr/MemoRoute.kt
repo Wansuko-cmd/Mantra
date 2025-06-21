@@ -1,6 +1,5 @@
-package com.wsr.memo
+package com.wsr
 
-import com.wsr.MemoResponseId
 import kotlinx.serialization.Serializable
 
 internal sealed interface MemoRoute {

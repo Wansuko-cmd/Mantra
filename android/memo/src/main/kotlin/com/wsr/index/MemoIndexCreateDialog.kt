@@ -1,4 +1,4 @@
-package com.wsr.memo.index
+package com.wsr.index
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -61,7 +61,7 @@ internal fun MemoIndexCreateDialog(
     }
 }
 
-data class MemoIndexCreateDialogListener(
+internal data class MemoIndexCreateDialogListener(
     val onDismiss: () -> Unit,
     val onChangeTitle: (String) -> Unit,
     val onChangeDescription: (String) -> Unit,

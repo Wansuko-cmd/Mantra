@@ -32,6 +32,8 @@ include(":lib")
 
 // APP
 include(":android:app")
+include(":android:assistant")
+include(":android:memo")
 include(":android:utils")
 
 // TODO

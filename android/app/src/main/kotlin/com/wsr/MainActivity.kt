@@ -7,8 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
-import com.wsr.assistant.AssistantScreen
-import com.wsr.memo.MemoScreen
 import com.wsr.theme.MantraTheme
 
 class MainActivity : ComponentActivity() {

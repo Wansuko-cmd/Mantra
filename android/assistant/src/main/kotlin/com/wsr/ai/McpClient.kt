@@ -1,4 +1,4 @@
-package com.wsr.assistant.ai
+package com.wsr.ai
 
 import dev.shreyaspatil.ai.client.generativeai.type.FunctionCallPart
 import dev.shreyaspatil.ai.client.generativeai.type.FunctionDeclaration
@@ -16,7 +16,7 @@ import kotlinx.serialization.json.jsonPrimitive
 private const val MCP_CLIENT_NAME = "mcp-client"
 private const val MCP_CLIENT_VERSION = "1.0.0"
 
-class McpClient private constructor(
+internal class McpClient private constructor(
     private val client: Client,
     val tools: List<Tool>,
 ) {

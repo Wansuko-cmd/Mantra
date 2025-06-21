@@ -1,4 +1,4 @@
-package com.wsr.assistant
+package com.wsr
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -41,7 +41,7 @@ import com.wsr.theme.colors
 import com.wsr.theme.shape
 
 @Composable
-internal fun AssistantScreen() {
+fun AssistantScreen() {
     val presenter = rememberAssistantPresenter()
     AssistantScreen(
         uiState = presenter.uiState,
@@ -119,7 +119,7 @@ private fun AssistantScreen(
 }
 
 @Composable
-internal fun AssistantBottomBar(
+private fun AssistantBottomBar(
     input: String,
     onChangeInput: (String) -> Unit,
     onClickSend: () -> Unit,

@@ -1,4 +1,4 @@
-package com.wsr.memo.index
+package com.wsr.index
 
 import androidx.compose.runtime.Composable
 import com.wsr.MemoController

@@ -1,4 +1,4 @@
-package com.wsr.memo.show
+package com.wsr.show
 
 import androidx.compose.runtime.Composable
 import com.wsr.ItemResponse

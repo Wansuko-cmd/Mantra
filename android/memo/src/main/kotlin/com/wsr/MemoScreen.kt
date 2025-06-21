@@ -1,15 +1,15 @@
-package com.wsr.memo
+package com.wsr
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.wsr.memo.index.MemoIndexScreen
-import com.wsr.memo.show.MemoShowScreen
+import com.wsr.index.MemoIndexScreen
+import com.wsr.show.MemoShowScreen
 
 @Composable
-internal fun MemoScreen() {
+fun MemoScreen() {
     val controller = rememberNavController()
     NavHost(
         navController = controller,

@@ -1,4 +1,4 @@
-package com.wsr.assistant.ai
+package com.wsr.ai
 
 import com.wsr.MemoController
 import com.wsr.mcp.GET_MEMOS
@@ -8,7 +8,7 @@ import dev.shreyaspatil.ai.client.generativeai.type.FunctionCallPart
 import dev.shreyaspatil.ai.client.generativeai.type.TextPart
 import dev.shreyaspatil.ai.client.generativeai.type.content
 
-class Assistant private constructor(private val client: McpClient) {
+internal class Assistant private constructor(private val client: McpClient) {
     private val model = GenerativeModel(
         modelName = "gemini-2.0-flash",
         apiKey = "",

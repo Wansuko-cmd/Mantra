@@ -35,6 +35,8 @@ android {
 }
 
 dependencies {
+    implementation(projects.android.assistant)
+    implementation(projects.android.memo)
     implementation(projects.android.utils)
 
     implementation(projects.todo.controller)
@@ -44,7 +46,4 @@ dependencies {
 
     implementation(platform(libs.koin.bom))
     implementation(libs.bundles.koin)
-
-    implementation(libs.mcp)
-    implementation(libs.generative.ai)
 }
