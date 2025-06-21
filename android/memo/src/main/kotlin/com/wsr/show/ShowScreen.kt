@@ -1,6 +1,7 @@
 package com.wsr.show
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -71,6 +72,7 @@ private fun ShowScreen(
                 )
             }
         },
+        modifier = Modifier.imePadding(),
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
