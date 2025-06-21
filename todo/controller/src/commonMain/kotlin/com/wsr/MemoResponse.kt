@@ -46,6 +46,7 @@ internal fun MemoResponse.toJsonString(): String {
     ) { item ->
         """
         {
+            id: ${item.id.value}
             title: ${item.title},
             description: ${item.description},
             checked: ${item.checked}

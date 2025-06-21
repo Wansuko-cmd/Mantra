@@ -1,5 +1,6 @@
 package com.wsr.mcp
 
+import com.wsr.ItemResponseId
 import com.wsr.MemoController
 import com.wsr.MemoResponseId
 import com.wsr.toJsonString
@@ -7,6 +8,7 @@ import io.modelcontextprotocol.kotlin.sdk.CallToolResult
 import io.modelcontextprotocol.kotlin.sdk.TextContent
 import io.modelcontextprotocol.kotlin.sdk.Tool
 import io.modelcontextprotocol.kotlin.sdk.server.Server
+import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
@@ -14,10 +16,11 @@ import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
 
 internal fun Server.applyMemoItemTools(controller: MemoController) = this.apply {
-    createMemoItemsTool(controller)
+    createMemoItemTool(controller)
+    updateMemoItemTool(controller)
 }
 
-private fun Server.createMemoItemsTool(controller: MemoController) = this.apply {
+private fun Server.createMemoItemTool(controller: MemoController) = this.apply {
     addTool(
         name = "create_memo_item",
         description = """
@@ -38,14 +41,14 @@ private fun Server.createMemoItemsTool(controller: MemoController) = this.apply 
                     put("description", "作成するTODOの説明文")
                 }
             },
-            required = listOf("memo_id"),
+            required = listOf("memo_id", "title"),
         ),
     ) { request ->
         val memoId = request.arguments["memo_id"]?.jsonPrimitive?.contentOrNull
         val title = request.arguments["title"]?.jsonPrimitive?.contentOrNull
-        val description = request.arguments["description"]?.jsonPrimitive?.contentOrNull
-        if (memoId == null || title == null || description == null) {
-            val content = TextContent("memo_id, title, descriptionは必須です")
+        val description = request.arguments["description"]?.jsonPrimitive?.contentOrNull.orEmpty()
+        if (memoId == null || title == null) {
+            val content = TextContent("memo_id, titleは必須です")
             return@addTool CallToolResult(content = listOf(content))
         }
         try {
@@ -55,6 +58,63 @@ private fun Server.createMemoItemsTool(controller: MemoController) = this.apply 
                 description = description,
             )
             val context = TextContent("追加後のメモ: ${memo.toJsonString()}")
+            CallToolResult(content = listOf(context))
+        } catch (e: Exception) {
+            CallToolResult(content = listOf(TextContent("エラー: $e")))
+        }
+    }
+}
+
+private fun Server.updateMemoItemTool(controller: MemoController) = this.apply {
+    addTool(
+        name = "update_memo_item",
+        description = """
+            TODOの内容を更新します
+        """.trimIndent(),
+        inputSchema = Tool.Input(
+            properties = buildJsonObject {
+                putJsonObject("memo_id") {
+                    put("type", "string")
+                    put("description", "紐づいているメモの識別子")
+                }
+                putJsonObject("item_id") {
+                    put("type", "string")
+                    put("description", "更新するTODOのID")
+                }
+                putJsonObject("title") {
+                    put("type", "string")
+                    put("description", "更新するTODOのタイトル")
+                }
+                putJsonObject("description") {
+                    put("type", "string")
+                    put("description", "更新するTODOの説明文")
+                }
+                putJsonObject("checked") {
+                    put("type", "bool")
+                    put("description", "更新するTODOのチェック状態")
+                }
+            },
+            required = listOf("memo_id", "item_id"),
+        ),
+    ) { request ->
+        val memoId = request.arguments["memo_id"]?.jsonPrimitive?.contentOrNull
+        val itemId = request.arguments["item_id"]?.jsonPrimitive?.contentOrNull
+        val title = request.arguments["title"]?.jsonPrimitive?.contentOrNull
+        val description = request.arguments["description"]?.jsonPrimitive?.contentOrNull
+        val checked = request.arguments["checked"]?.jsonPrimitive?.booleanOrNull
+        if (memoId == null || itemId == null) {
+            val content = TextContent("memo_id, item_idは必須です")
+            return@addTool CallToolResult(content = listOf(content))
+        }
+        try {
+            val memo = controller.updateItem(
+                memoId = MemoResponseId(memoId),
+                itemId = ItemResponseId(itemId),
+                title = title,
+                description = description,
+                checked = checked,
+            )
+            val context = TextContent("更新後のメモ: ${memo.toJsonString()}")
             CallToolResult(content = listOf(context))
         } catch (e: Exception) {
             CallToolResult(content = listOf(TextContent("エラー: $e")))
