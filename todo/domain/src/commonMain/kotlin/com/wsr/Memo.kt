@@ -16,26 +16,29 @@ data class Memo private constructor(
 
     fun getItem(id: ItemId) = items.first { it.id == id }
 
-    fun addItem(title: String, description: String, checked: Boolean = false) = copy(
+    fun addItem(title: String, description: String, checked: Boolean = false) = updateItems(
         items = items + Item(title = title, description = description, checked = checked),
     )
 
-    fun updateItem(id: ItemId, title: String?, description: String?, checked: Boolean?) = copy(
-        items = items.map { item ->
-            if (item.id == id) {
-                Item(
-                    id = id,
-                    title = title ?: item.title,
-                    description = description ?: item.description,
-                    checked = checked ?: item.checked,
-                )
-            } else {
-                item
-            }
-        },
-    )
+    fun updateItem(id: ItemId, title: String?, description: String?, checked: Boolean?) =
+        updateItems(
+            items = items.map { item ->
+                if (item.id == id) {
+                    Item(
+                        id = id,
+                        title = title ?: item.title,
+                        description = description ?: item.description,
+                        checked = checked ?: item.checked,
+                    )
+                } else {
+                    item
+                }
+            },
+        )
 
-    fun removeItem(id: ItemId) = copy(items = items.filterNot { it.id == id })
+    private fun updateItems(items: List<Item>) = copy(items = items.sortedBy { it.checked })
+
+    fun removeItem(id: ItemId) = updateItems(items = items.filterNot { it.id == id })
 
     companion object {
         fun create(title: String, description: String) = Memo(
@@ -49,7 +52,7 @@ data class Memo private constructor(
             id = id,
             title = title,
             description = description,
-            items = items,
+            items = items.sortedBy { it.checked },
         )
     }
 }

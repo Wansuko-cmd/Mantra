@@ -125,7 +125,7 @@ internal data class ShowUiState(
     val detailBottomSheet: ShowDetailBottomSheetUiState? = null,
 ) : UiState {
     fun updateItem(id: ItemResponseId, block: (ItemResponse) -> ItemResponse) =
-        copy(items = items.map { if (it.id == id) block(it) else it })
+        copy(items = items.map { if (it.id == id) block(it) else it }.sortedBy { it.checked })
 }
 
 internal data class ShowDetailBottomSheetUiState(

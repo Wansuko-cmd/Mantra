@@ -51,7 +51,11 @@ internal fun ShowItemCard(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                color = MantraTheme.colors.FieldBeige10,
+                color = if (item.checked) {
+                    MantraTheme.colors.White100
+                } else {
+                    MantraTheme.colors.FieldBeige10
+                },
                 shape = MantraTheme.shape.Small,
             )
             .border(

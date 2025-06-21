@@ -80,11 +80,13 @@ private fun ShowScreen(
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp),
         ) {
-            items(uiState.items) { item ->
+            items(uiState.items, key = { it.id.value }) { item ->
                 ShowItemCard(
                     item = item,
                     listener = showItemCardListener,
-                    modifier = Modifier.padding(vertical = 12.dp),
+                    modifier = Modifier
+                        .padding(vertical = 12.dp)
+                        .animateItem(),
                 )
             }
         }
