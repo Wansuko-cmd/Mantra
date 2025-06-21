@@ -48,7 +48,7 @@ import com.wsr.theme.colors
 import com.wsr.theme.shape
 
 @Composable
-internal fun MemoShowRoute(memoId: MemoResponseId) {
+internal fun MemoShowScreen(memoId: MemoResponseId) {
     val presenter = rememberMemoShowPresenter(memoId)
     MemoShowScreen(
         uiState = presenter.uiState,

@@ -42,11 +42,10 @@ import com.wsr.theme.colors
 import com.wsr.theme.shape
 
 @Composable
-internal fun AssistantRoute(navigateToMemoIndex: () -> Unit) {
+internal fun AssistantScreen() {
     val presenter = rememberAssistantPresenter()
     AssistantScreen(
         uiState = presenter.uiState,
-        onClickMemo = navigateToMemoIndex,
         onChangeInput = presenter::onChangeInput,
         onClickSend = presenter::onClickSend,
     )
@@ -56,23 +55,12 @@ internal fun AssistantRoute(navigateToMemoIndex: () -> Unit) {
 @Composable
 private fun AssistantScreen(
     uiState: AssistantUiState,
-    onClickMemo: () -> Unit,
     onChangeInput: (String) -> Unit,
     onClickSend: () -> Unit,
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("アシスタント面") },
-                actions = {
-                    IconButton(onClick = onClickMemo) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.List,
-                            contentDescription = null,
-                        )
-                    }
-                },
-            )
+            TopAppBar(title = { Text("アシスタント面") })
         },
         bottomBar = {
             AssistantBottomBar(

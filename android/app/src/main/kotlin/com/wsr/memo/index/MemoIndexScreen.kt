@@ -37,14 +37,10 @@ import com.wsr.theme.colors
 import com.wsr.theme.shape
 
 @Composable
-internal fun MemoIndexRoute(
-    navigateToAssistant: () -> Unit,
-    navigateToShow: (MemoResponseId) -> Unit,
-) {
+internal fun MemoIndexScreen(navigateToShow: (MemoResponseId) -> Unit) {
     val presenter = rememberMemoIndexPresenter()
     MemoIndexScreen(
         uiState = presenter.uiState,
-        onClickAssistant = navigateToAssistant,
         onClickFabButton = presenter::onClickFabButton,
         onClickMemo = navigateToShow,
         onClickMemoDetail = presenter::onClickMemoDetail,
@@ -67,7 +63,6 @@ internal fun MemoIndexRoute(
 @Composable
 private fun MemoIndexScreen(
     uiState: MemoIndexUiState,
-    onClickAssistant: () -> Unit,
     onClickFabButton: () -> Unit,
     onClickMemo: (memoId: MemoResponseId) -> Unit,
     onClickMemoDetail: (memoId: MemoResponseId) -> Unit,
@@ -77,17 +72,7 @@ private fun MemoIndexScreen(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = "メモ一覧") },
-                actions = {
-                    IconButton(onClick = onClickAssistant) {
-                        Icon(
-                            imageVector = Icons.Default.AccountCircle,
-                            contentDescription = null,
-                        )
-                    }
-                },
-            )
+            TopAppBar(title = { Text(text = "メモ一覧") })
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onClickFabButton) {

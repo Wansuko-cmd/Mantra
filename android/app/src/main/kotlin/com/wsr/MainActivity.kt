@@ -4,13 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
-import com.wsr.assistant.AssistantRoute
-import com.wsr.memo.index.MemoIndexRoute
-import com.wsr.memo.show.MemoShowRoute
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.runtime.Composable
+import com.wsr.assistant.AssistantScreen
+import com.wsr.memo.MemoScreen
 import com.wsr.theme.MantraTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,35 +17,25 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MantraTheme {
-                val controller = rememberNavController()
-                NavHost(
-                    navController = controller,
-                    startDestination = Route.Assistant,
-                ) {
-                    composable<Route.Memo.Index> {
-                        MemoIndexRoute(
-                            navigateToAssistant = {
-                                controller.navigate(Route.Assistant)
-                            },
-                            navigateToShow = { memoId ->
-                                val route = Route.Memo.Show.create(memoId)
-                                controller.navigate(route)
-                            },
-                        )
-                    }
-                    composable<Route.Memo.Show> { backStackEntry ->
-                        val memoId = backStackEntry.toRoute<Route.Memo.Show>().memoId
-                        MemoShowRoute(memoId)
-                    }
-                    composable<Route.Assistant> {
-                        AssistantRoute(
-                            navigateToMemoIndex = {
-                                controller.navigate(Route.Memo.Index)
-                            },
-                        )
-                    }
-                }
+                LPScreen()
             }
         }
+    }
+
+    @Composable
+    private fun LPScreen() {
+        val pager = LPRoute.entries
+        val state = rememberPagerState(initialPage = 0) { pager.size }
+        HorizontalPager(state) { index ->
+            when (pager[index]) {
+                LPRoute.Assistant -> AssistantScreen()
+                LPRoute.Memo -> MemoScreen()
+            }
+        }
+    }
+
+    private enum class LPRoute {
+        Assistant,
+        Memo;
     }
 }
