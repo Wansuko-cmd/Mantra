@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.Checkbox
@@ -48,10 +49,11 @@ import com.wsr.theme.colors
 import com.wsr.theme.shape
 
 @Composable
-internal fun MemoShowScreen(memoId: MemoResponseId) {
+internal fun MemoShowScreen(memoId: MemoResponseId, onBackPress: () -> Unit) {
     val presenter = rememberMemoShowPresenter(memoId)
     MemoShowScreen(
         uiState = presenter.uiState,
+        onBackPress = onBackPress,
         onClickFabButton = presenter::onClickFabButton,
         onChangeItemTitle = presenter::onChangeItemTitle,
         onChangeItemChecked = presenter::onChangeItemChecked,
@@ -69,6 +71,7 @@ internal fun MemoShowScreen(memoId: MemoResponseId) {
 @Composable
 private fun MemoShowScreen(
     uiState: MemoShowUiState,
+    onBackPress: () -> Unit,
     onClickFabButton: () -> Unit,
     onChangeItemTitle: (id: ItemResponseId, title: String) -> Unit,
     onChangeItemChecked: (id: ItemResponseId, checked: Boolean) -> Unit,
@@ -78,7 +81,17 @@ private fun MemoShowScreen(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(text = uiState.title) })
+            TopAppBar(
+                title = { Text(text = uiState.title) },
+                navigationIcon = {
+                    IconButton(onClick = onBackPress) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null,
+                        )
+                    }
+                },
+            )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onClickFabButton) {

@@ -1,4 +1,4 @@
-package com.wsr.assistant
+package com.wsr.assistant.ai
 
 sealed interface Content {
     val part: Part

@@ -5,6 +5,9 @@ import com.wsr.MemoController
 import com.wsr.Presenter
 import com.wsr.UiEvent
 import com.wsr.UiState
+import com.wsr.assistant.ai.Assistant
+import com.wsr.assistant.ai.Content
+import com.wsr.assistant.ai.Part
 import com.wsr.rememberPresenter
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject

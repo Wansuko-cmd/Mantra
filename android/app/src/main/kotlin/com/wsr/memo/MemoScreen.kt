@@ -25,7 +25,7 @@ internal fun MemoScreen() {
         }
         composable<MemoRoute.Show> { backStackEntry ->
             val memoId = backStackEntry.toRoute<MemoRoute.Show>().memoId
-            MemoShowScreen(memoId = memoId)
+            MemoShowScreen(memoId = memoId, onBackPress = controller::popBackStack)
         }
     }
 }

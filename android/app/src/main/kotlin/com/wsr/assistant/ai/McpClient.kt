@@ -1,4 +1,4 @@
-package com.wsr.assistant
+package com.wsr.assistant.ai
 
 import dev.shreyaspatil.ai.client.generativeai.type.FunctionCallPart
 import dev.shreyaspatil.ai.client.generativeai.type.FunctionDeclaration
@@ -17,7 +17,7 @@ private const val MCP_CLIENT_NAME = "mcp-client"
 private const val MCP_CLIENT_VERSION = "1.0.0"
 
 class McpClient private constructor(
-    val client: Client,
+    private val client: Client,
     val tools: List<Tool>,
 ) {
     suspend fun callTool(part: FunctionCallPart): Content.Tool {

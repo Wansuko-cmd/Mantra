@@ -1,4 +1,4 @@
-package com.wsr.assistant
+package com.wsr.assistant.ai
 
 import com.wsr.MemoController
 import com.wsr.mcp.GET_MEMOS
@@ -114,6 +114,7 @@ class Assistant private constructor(private val client: McpClient) {
     }
 
     companion object {
+        @Volatile
         private var instance: Assistant? = null
         suspend fun create(controller: MemoController): Assistant = instance ?: run {
             val transport = setUpMcpServer(controller)
