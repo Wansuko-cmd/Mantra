@@ -47,17 +47,17 @@ private fun Server.createMemoTool(controller: MemoController): Server = this.app
     addTool(
         name = CREATE_MEMO,
         description = """
-            新たなメモを作成します
+            新しいメモを作成します
         """.trimIndent(),
         inputSchema = Tool.Input(
             properties = buildJsonObject {
                 putJsonObject("title") {
                     put("type", "string")
-                    put("description", "The title of memo you will create.")
+                    put("description", "追加するメモのタイトル")
                 }
                 putJsonObject("description") {
                     put("type", "string")
-                    put("description", "The description of memo you will create.")
+                    put("description", "追加するメモの説明文")
                 }
             },
             required = listOf("title"),
@@ -117,7 +117,7 @@ private fun Server.updateMemoTool(controller: MemoController): Server = this.app
             val content = TextContent("更新後のメモ: ${memo.toJsonString()}")
             CallToolResult(content = listOf(content))
         } else {
-            val content = TextContent("titleは必須です")
+            val content = TextContent("memo_idは必須です")
             CallToolResult(content = listOf(content))
         }
     }
@@ -147,7 +147,7 @@ private fun Server.deleteMemoTool(controller: MemoController): Server = this.app
             val content = TextContent("削除したメモのID: ${id.value}")
             CallToolResult(content = listOf(content))
         } else {
-            val content = TextContent("titleは必須です")
+            val content = TextContent("memo_idは必須です")
             CallToolResult(content = listOf(content))
         }
     }
