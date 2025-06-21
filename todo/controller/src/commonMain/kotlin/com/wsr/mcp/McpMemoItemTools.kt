@@ -18,11 +18,13 @@ import kotlinx.serialization.json.putJsonObject
 const val CREATE_MEMO_ITEM = "create_memo_item"
 const val UPDATE_MEMO_ITEM = "update_memo_item"
 const val MOVE_MEMO_ITEM = "move_memo_item"
+const val REMOVE_MEMO_ITEM = "remove_memo_item"
 
 internal fun Server.applyMemoItemTools(controller: MemoController) = this.apply {
     createMemoItemTool(controller)
     updateMemoItemTool(controller)
     moveMemoItemTool(controller)
+    removeMemoItemTool(controller)
 }
 
 private fun Server.createMemoItemTool(controller: MemoController) = this.apply {
@@ -176,3 +178,42 @@ private fun Server.moveMemoItemTool(controller: MemoController) = this.apply {
     }
 }
 
+private fun Server.removeMemoItemTool(controller: MemoController) = this.apply {
+    addTool(
+        name = REMOVE_MEMO_ITEM,
+        description = """
+            指定されたメモ上の、指定されたTODOを削除します
+            指定するために用いるIDは${GET_MEMOS}で確認可能です
+        """.trimIndent(),
+        inputSchema = Tool.Input(
+            properties = buildJsonObject {
+                putJsonObject("memo_id") {
+                    put("type", "string")
+                    put("description", "紐づいているメモの識別子")
+                }
+                putJsonObject("item_id") {
+                    put("type", "string")
+                    put("description", "削除するTODOのID")
+                }
+            },
+            required = listOf("memo_id", "item_id"),
+        ),
+    ) { request ->
+        val memoId = request.arguments["memo_id"]?.jsonPrimitive?.contentOrNull
+        val itemId = request.arguments["item_id"]?.jsonPrimitive?.contentOrNull
+        if (memoId == null || itemId == null) {
+            val content = TextContent("memo_id, item_idは必須です")
+            return@addTool CallToolResult(content = listOf(content))
+        }
+        try {
+            val memo = controller.removeItem(
+                memoId = MemoResponseId(memoId),
+                itemId = ItemResponseId(itemId),
+            )
+            val context = TextContent("削除後のメモ: ${memo.toJsonString()}")
+            CallToolResult(content = listOf(context))
+        } catch (e: Exception) {
+            CallToolResult(content = listOf(TextContent("エラー: $e")))
+        }
+    }
+}
