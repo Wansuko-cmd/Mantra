@@ -17,11 +17,13 @@ import kotlinx.serialization.json.putJsonObject
 const val GET_MEMOS = "get_memos"
 const val CREATE_MEMO = "create_memo"
 const val UPDATE_MEMO = "update_memo"
+const val DELETE_MEMO = "delete_memo"
 
 internal fun Server.applyMemoTools(controller: MemoController) = this.apply {
     getMemosTool(controller)
     createMemoTool(controller)
     updateMemoTool(controller)
+    deleteMemoTool(controller)
 }
 
 private fun Server.getMemosTool(controller: MemoController): Server = this.apply {
@@ -121,3 +123,32 @@ private fun Server.updateMemoTool(controller: MemoController): Server = this.app
     }
 }
 
+private fun Server.deleteMemoTool(controller: MemoController): Server = this.apply {
+    addTool(
+        name = DELETE_MEMO,
+        description = """
+            指定されたメモに付随する情報を削除します
+            メモに紐づくアイテムを削除したい場合は${REMOVE_MEMO_ITEM}を利用してください
+            指定するために用いるIDは${GET_MEMOS}で確認可能です
+        """.trimIndent(),
+        inputSchema = Tool.Input(
+            properties = buildJsonObject {
+                putJsonObject("memo_id") {
+                    put("type", "string")
+                    put("description", "更新するメモの識別子")
+                }
+            },
+            required = listOf("memo_id"),
+        ),
+    ) { request ->
+        val memoId = request.arguments["memo_id"]?.jsonPrimitive?.contentOrNull
+        if (memoId != null) {
+            val id = controller.delete(id = MemoResponseId(memoId))
+            val content = TextContent("削除したメモのID: ${id.value}")
+            CallToolResult(content = listOf(content))
+        } else {
+            val content = TextContent("titleは必須です")
+            CallToolResult(content = listOf(content))
+        }
+    }
+}
