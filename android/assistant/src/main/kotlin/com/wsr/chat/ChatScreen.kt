@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,10 +33,11 @@ import com.wsr.theme.colors
 import com.wsr.theme.shape
 
 @Composable
-internal fun ChatScreen() {
+internal fun ChatScreen(navigateToSetting: () -> Unit) {
     val presenter = rememberChatPresenter()
     ChatScreen(
         uiState = presenter.uiState,
+        onClickSetting = navigateToSetting,
         onChangeInput = presenter::onChangeInput,
         onClickSend = presenter::onClickSend,
     )
@@ -45,12 +47,23 @@ internal fun ChatScreen() {
 @Composable
 private fun ChatScreen(
     uiState: ChatUiState,
+    onClickSetting: () -> Unit,
     onChangeInput: (String) -> Unit,
     onClickSend: () -> Unit,
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("アシスタント面") })
+            TopAppBar(
+                title = { Text("アシスタント面") },
+                actions = {
+                    IconButton(onClick = onClickSetting) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = null,
+                        )
+                    }
+                }
+            )
         },
         bottomBar = {
             ChatBottomBar(

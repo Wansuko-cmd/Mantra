@@ -1,6 +1,8 @@
 package com.wsr
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -14,6 +16,7 @@ fun MemoScreen() {
     NavHost(
         navController = controller,
         startDestination = MemoRoute.Index,
+        modifier = Modifier.fillMaxSize(),
     ) {
         composable<MemoRoute.Index> {
             IndexScreen(
