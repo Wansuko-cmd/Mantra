@@ -7,28 +7,20 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,101 +35,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.wsr.ItemResponse
 import com.wsr.ItemResponseId
-import com.wsr.MemoResponseId
 import com.wsr.theme.MantraTheme
 import com.wsr.theme.colors
 import com.wsr.theme.shape
 
-@Composable
-internal fun MemoShowScreen(memoId: MemoResponseId, onBackPress: () -> Unit) {
-    val presenter = rememberMemoShowPresenter(memoId)
-    MemoShowScreen(
-        uiState = presenter.uiState,
-        onBackPress = onBackPress,
-        onClickFabButton = presenter::onClickFabButton,
-        onChangeItemTitle = presenter::onChangeItemTitle,
-        onChangeItemChecked = presenter::onChangeItemChecked,
-        onClickItemDetail = presenter::onClickItemDetail,
-        onClickItemDelete = presenter::onClickItemDelete,
-        detailBottomSheetListener = MemoShowDetailBottomSheetListener(
-            onDismiss = presenter::onDismissDetailBottomSheet,
-            onChangeTitle = presenter::onChangeDetailBottomSheetTitle,
-            onChangeDescription = presenter::onChangeDetailBottomSheetDescription,
-        ),
-    )
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MemoShowScreen(
-    uiState: MemoShowUiState,
-    onBackPress: () -> Unit,
-    onClickFabButton: () -> Unit,
-    onChangeItemTitle: (id: ItemResponseId, title: String) -> Unit,
-    onChangeItemChecked: (id: ItemResponseId, checked: Boolean) -> Unit,
-    onClickItemDetail: (itemId: ItemResponseId) -> Unit,
-    onClickItemDelete: (itemId: ItemResponseId) -> Unit,
-    detailBottomSheetListener: MemoShowDetailBottomSheetListener,
-) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = uiState.title) },
-                navigationIcon = {
-                    IconButton(onClick = onBackPress) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null,
-                        )
-                    }
-                },
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = onClickFabButton) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = null,
-                )
-            }
-        },
-    ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp),
-        ) {
-            items(uiState.items) { item ->
-                ItemRow(
-                    item = item,
-                    onChangeTitle = { onChangeItemTitle(item.id, it) },
-                    onChangeChecked = { onChangeItemChecked(item.id, it) },
-                    onClickDetail = { onClickItemDetail(item.id) },
-                    onClickDelete = { onClickItemDelete(item.id) },
-                    modifier = Modifier.padding(vertical = 12.dp),
-                )
-            }
-        }
-    }
-
-    val detailBottomSheetUiState = uiState.detailBottomSheet
-    if (detailBottomSheetUiState != null) {
-        MemoShowDetailBottomSheet(
-            uiState = detailBottomSheetUiState,
-            listener = detailBottomSheetListener,
-        )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ItemRow(
+internal fun ShowItemCard(
     item: ItemResponse,
-    onChangeTitle: (title: String) -> Unit,
-    onChangeChecked: (checked: Boolean) -> Unit,
-    onClickDetail: () -> Unit,
-    onClickDelete: () -> Unit,
+    listener: ShowItemCardListener,
     modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -158,12 +64,12 @@ private fun ItemRow(
     ) {
         Checkbox(
             checked = item.checked,
-            onCheckedChange = { onChangeChecked(it) },
+            onCheckedChange = { listener.onChangeChecked(item.id, it) },
         )
         Spacer(modifier = Modifier.width(8.dp))
         BasicTextField(
             value = item.title,
-            onValueChange = { onChangeTitle(it) },
+            onValueChange = { listener.onChangeTitle(item.id, it) },
             modifier = Modifier
                 .weight(1f)
                 .fillMaxHeight(),
@@ -198,14 +104,14 @@ private fun ItemRow(
                 DropdownMenuItem(
                     text = { Text(text = "詳細") },
                     onClick = {
-                        onClickDetail()
+                        listener.onClickDetail(item.id)
                         expanded = false
                     },
                 )
                 DropdownMenuItem(
                     text = { Text(text = "削除する", color = MantraTheme.colors.Red80) },
                     onClick = {
-                        onClickDelete()
+                        listener.onClickDelete(item.id)
                         expanded = false
                     },
                 )
@@ -213,3 +119,10 @@ private fun ItemRow(
         }
     }
 }
+
+internal data class ShowItemCardListener(
+    val onChangeTitle: (id: ItemResponseId, title: String) -> Unit,
+    val onChangeChecked: (id: ItemResponseId, checked: Boolean) -> Unit,
+    val onClickDetail: (id: ItemResponseId) -> Unit,
+    val onClickDelete: (id: ItemResponseId) -> Unit,
+)

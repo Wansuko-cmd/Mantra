@@ -15,25 +15,25 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 @Composable
-internal fun rememberMemoShowPresenter(
+internal fun rememberShowPresenter(
     memoId: MemoResponseId,
     controller: MemoController = koinInject(),
-): MemoShowPresenter = rememberPresenter {
-    MemoShowPresenter(
+): ShowPresenter = rememberPresenter {
+    ShowPresenter(
         memoId = memoId,
         controller = controller,
     )
 }
 
-internal class MemoShowPresenter(
+internal class ShowPresenter(
     private val memoId: MemoResponseId,
     private val controller: MemoController,
-) : Presenter<MemoShowUiState, UiEvent>(MemoShowUiState()) {
+) : Presenter<ShowUiState, UiEvent>(ShowUiState()) {
     override fun onRemembered() {
         super.onRemembered()
         controller.get(memoId)
             .onEach { memo ->
-                uiState = MemoShowUiState(
+                uiState = ShowUiState(
                     title = memo.title,
                     items = memo.items,
                 )
@@ -76,7 +76,7 @@ internal class MemoShowPresenter(
     fun onClickItemDetail(id: ItemResponseId) {
         val item = uiState.items.firstOrNull { it.id == id } ?: return
         uiState = uiState.copy(
-            detailBottomSheet = MemoShowDetailBottomSheetUiState(
+            detailBottomSheet = ShowDetailBottomSheetUiState(
                 id = id,
                 title = item.title,
                 description = item.description,
@@ -119,16 +119,16 @@ internal class MemoShowPresenter(
     }
 }
 
-internal data class MemoShowUiState(
+internal data class ShowUiState(
     val title: String = "",
     val items: List<ItemResponse> = emptyList(),
-    val detailBottomSheet: MemoShowDetailBottomSheetUiState? = null,
+    val detailBottomSheet: ShowDetailBottomSheetUiState? = null,
 ) : UiState {
     fun updateItem(id: ItemResponseId, block: (ItemResponse) -> ItemResponse) =
         copy(items = items.map { if (it.id == id) block(it) else it })
 }
 
-internal data class MemoShowDetailBottomSheetUiState(
+internal data class ShowDetailBottomSheetUiState(
     val id: ItemResponseId,
     val title: String,
     val description: String,

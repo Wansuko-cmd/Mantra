@@ -24,9 +24,9 @@ import com.wsr.theme.shape
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun MemoIndexCreateDialog(
-    uiState: MemoIndexCreateDialogUiState,
-    listener: MemoIndexCreateDialogListener,
+internal fun IndexCreateDialog(
+    uiState: IndexCreateDialogUiState,
+    listener: IndexCreateDialogListener,
 ) {
     BasicAlertDialog(onDismissRequest = listener.onDismiss) {
         Surface(
@@ -61,7 +61,7 @@ internal fun MemoIndexCreateDialog(
     }
 }
 
-internal data class MemoIndexCreateDialogListener(
+internal data class IndexCreateDialogListener(
     val onDismiss: () -> Unit,
     val onChangeTitle: (String) -> Unit,
     val onChangeDescription: (String) -> Unit,
@@ -70,14 +70,14 @@ internal data class MemoIndexCreateDialogListener(
 
 @Preview
 @Composable
-private fun MemoIndexCreateDialogPreview() {
+private fun IndexCreateDialogPreview() {
     MantraTheme {
-        MemoIndexCreateDialog(
-            uiState = MemoIndexCreateDialogUiState(
+        IndexCreateDialog(
+            uiState = IndexCreateDialogUiState(
                 title = "title",
                 description = "description",
             ),
-            listener = MemoIndexCreateDialogListener(
+            listener = IndexCreateDialogListener(
                 onDismiss = {},
                 onChangeTitle = {},
                 onChangeDescription = {},

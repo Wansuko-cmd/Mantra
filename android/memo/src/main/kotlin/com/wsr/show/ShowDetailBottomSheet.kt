@@ -15,9 +15,9 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun MemoShowDetailBottomSheet(
-    uiState: MemoShowDetailBottomSheetUiState,
-    listener: MemoShowDetailBottomSheetListener,
+internal fun ShowDetailBottomSheet(
+    uiState: ShowDetailBottomSheetUiState,
+    listener: ShowDetailBottomSheetListener,
 ) {
     ModalBottomSheet(onDismissRequest = listener.onDismiss) {
         Column(modifier = Modifier.padding(vertical = 16.dp, horizontal = 32.dp)) {
@@ -38,7 +38,7 @@ internal fun MemoShowDetailBottomSheet(
     }
 }
 
-internal data class MemoShowDetailBottomSheetListener(
+internal data class ShowDetailBottomSheetListener(
     val onDismiss: () -> Unit,
     val onChangeTitle: (String) -> Unit,
     val onChangeDescription: (String) -> Unit,

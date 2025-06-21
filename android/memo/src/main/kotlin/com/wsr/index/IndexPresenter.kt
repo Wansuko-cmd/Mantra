@@ -14,23 +14,22 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 @Composable
-internal fun rememberMemoIndexPresenter(
-    controller: MemoController = koinInject(),
-): MemoIndexPresenter = rememberPresenter {
-    MemoIndexPresenter(controller = controller)
-}
+internal fun rememberIndexPresenter(controller: MemoController = koinInject()): IndexPresenter =
+    rememberPresenter {
+        IndexPresenter(controller = controller)
+    }
 
-internal class MemoIndexPresenter(
+internal class IndexPresenter(
     private val controller: MemoController,
-) : Presenter<MemoIndexUiState, UiEvent>(initialValue = MemoIndexUiState()) {
+) : Presenter<IndexUiState, UiEvent>(initialValue = IndexUiState()) {
     override fun onRemembered() {
         controller.getAll()
-            .onEach { uiState = MemoIndexUiState(it) }
+            .onEach { uiState = IndexUiState(it) }
             .launchIn(scope)
     }
 
     fun onClickFabButton() {
-        uiState = uiState.copy(createDialog = MemoIndexCreateDialogUiState())
+        uiState = uiState.copy(createDialog = IndexCreateDialogUiState())
     }
 
     fun onDismissCreateDialog() {
@@ -57,7 +56,7 @@ internal class MemoIndexPresenter(
     fun onClickMemoDetail(id: MemoResponseId) {
         val memo = uiState.memos.firstOrNull { it.id == id } ?: return
         uiState = uiState.copy(
-            detailBottomSheet = MemoIndexDetailBottomSheetUiState(
+            detailBottomSheet = IndexDetailBottomSheetUiState(
                 id = id,
                 title = memo.title,
                 description = memo.description,
@@ -96,18 +95,18 @@ internal class MemoIndexPresenter(
     }
 }
 
-internal data class MemoIndexUiState(
+internal data class IndexUiState(
     val memos: List<MemoResponse> = emptyList(),
-    val createDialog: MemoIndexCreateDialogUiState? = null,
-    val detailBottomSheet: MemoIndexDetailBottomSheetUiState? = null,
+    val createDialog: IndexCreateDialogUiState? = null,
+    val detailBottomSheet: IndexDetailBottomSheetUiState? = null,
 ) : UiState
 
-internal data class MemoIndexCreateDialogUiState(
+internal data class IndexCreateDialogUiState(
     val title: String = "",
     val description: String = "",
 )
 
-internal data class MemoIndexDetailBottomSheetUiState(
+internal data class IndexDetailBottomSheetUiState(
     val id: MemoResponseId,
     val title: String,
     val description: String,

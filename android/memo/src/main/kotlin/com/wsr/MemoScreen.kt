@@ -5,8 +5,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.wsr.index.MemoIndexScreen
-import com.wsr.show.MemoShowScreen
+import com.wsr.index.IndexScreen
+import com.wsr.show.ShowScreen
 
 @Composable
 fun MemoScreen() {
@@ -16,7 +16,7 @@ fun MemoScreen() {
         startDestination = MemoRoute.Index,
     ) {
         composable<MemoRoute.Index> {
-            MemoIndexScreen(
+            IndexScreen(
                 navigateToShow = { memoId ->
                     val route = MemoRoute.Show.create(memoId)
                     controller.navigate(route)
@@ -25,7 +25,7 @@ fun MemoScreen() {
         }
         composable<MemoRoute.Show> { backStackEntry ->
             val memoId = backStackEntry.toRoute<MemoRoute.Show>().memoId
-            MemoShowScreen(memoId = memoId, onBackPress = controller::popBackStack)
+            ShowScreen(memoId = memoId, onBackPress = controller::popBackStack)
         }
     }
 }
