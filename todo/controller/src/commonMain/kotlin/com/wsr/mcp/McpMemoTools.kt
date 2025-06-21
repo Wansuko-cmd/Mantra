@@ -1,6 +1,8 @@
 package com.wsr.mcp
 
 import com.wsr.MemoController
+import com.wsr.MemoResponse
+import com.wsr.toJsonString
 import io.modelcontextprotocol.kotlin.sdk.CallToolResult
 import io.modelcontextprotocol.kotlin.sdk.TextContent
 import io.modelcontextprotocol.kotlin.sdk.Tool
@@ -27,29 +29,9 @@ private fun Server.getMemosTool(controller: MemoController): Server = this.apply
     ) { _ ->
         val memos = controller.getAll().first()
         CallToolResult(
-            content = memos.map { memo ->
-                val items = memo.items.joinToString("\n") { item ->
-                    """
-                    {
-                        title: ${item.title},
-                        description: ${item.description},
-                        checked: ${item.description}
-                    }
-                    """.trimIndent()
-                }
-                TextContent(
-                    """
-                    {
-                        id: ${memo.id},
-                        title: ${memo.title},
-                        description: ${memo.description},
-                        items: {
-                            $items
-                        }
-                    }
-                    """.trimIndent(),
-                )
-            },
+            content = memos
+                .map { memo -> memo.toJsonString() }
+                .map { TextContent(it) },
         )
     }
 }
@@ -77,19 +59,15 @@ private fun Server.createMemoTool(controller: MemoController): Server = this.app
         val title = request.arguments["title"]?.jsonPrimitive?.contentOrNull
         val description = request.arguments["description"]?.jsonPrimitive?.contentOrNull
         if (title != null && description != null) {
-            controller.create(
+            val memo = controller.create(
                 title = title,
                 description = description,
             )
-            CallToolResult(
-                content = listOf(TextContent("作成しました")),
-            )
+            val content = TextContent("追加したメモ: ${memo.toJsonString()}")
+            CallToolResult(content = listOf(content))
         } else {
-            CallToolResult(
-                content = listOf(
-                    TextContent("The 'title' and 'description' parameters are required."),
-                ),
-            )
+            val content = TextContent("titleとdescriptionは必須です")
+            CallToolResult(content = listOf(content))
         }
     }
 }

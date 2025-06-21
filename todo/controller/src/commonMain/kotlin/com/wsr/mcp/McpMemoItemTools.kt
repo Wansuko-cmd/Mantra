@@ -2,6 +2,7 @@ package com.wsr.mcp
 
 import com.wsr.MemoController
 import com.wsr.MemoResponseId
+import com.wsr.toJsonString
 import io.modelcontextprotocol.kotlin.sdk.CallToolResult
 import io.modelcontextprotocol.kotlin.sdk.TextContent
 import io.modelcontextprotocol.kotlin.sdk.Tool
@@ -44,21 +45,19 @@ private fun Server.createMemoItemsTool(controller: MemoController) = this.apply 
         val title = request.arguments["title"]?.jsonPrimitive?.contentOrNull
         val description = request.arguments["description"]?.jsonPrimitive?.contentOrNull
         if (memoId == null || title == null || description == null) {
-            return@addTool CallToolResult(
-                content = listOf(
-                    TextContent("memo_id, title, descriptionは必須です"),
-                ),
-            )
+            val content = TextContent("memo_id, title, descriptionは必須です")
+            return@addTool CallToolResult(content = listOf(content))
         }
         try {
-            controller.addItem(
+            val memo = controller.addItem(
                 id = MemoResponseId(memoId),
                 title = title,
                 description = description,
             )
-            CallToolResult(content = listOf(TextContent("成功")))
+            val context = TextContent("追加後のメモ: ${memo.toJsonString()}")
+            CallToolResult(content = listOf(context))
         } catch (e: Exception) {
-            CallToolResult(content = listOf(TextContent("失敗: $e")))
+            CallToolResult(content = listOf(TextContent("エラー: $e")))
         }
     }
 }

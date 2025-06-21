@@ -37,3 +37,27 @@ value class MemoResponseId(val value: String)
 
 @JvmInline
 value class ItemResponseId(val value: String)
+
+internal fun MemoResponse.toJsonString(): String {
+    val items = items.joinToString(
+        separator = "\n",
+        prefix = "{\n",
+        postfix = "}\n",
+    ) { item ->
+        """
+        {
+            title: ${item.title},
+            description: ${item.description},
+            checked: ${item.checked}
+        }
+        """.trimIndent()
+    }
+    return """
+    {
+        id: ${id.value},
+        title: ${title},
+        description: ${description},
+        items: $items
+    }
+    """.trimIndent()
+}
