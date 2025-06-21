@@ -1,22 +1,26 @@
-package com.wsr
+package com.wsr.chat
 
 import androidx.compose.runtime.Composable
-import com.wsr.ai.Assistant
-import com.wsr.ai.Content
-import com.wsr.ai.Part
+import com.wsr.MemoController
+import com.wsr.Presenter
+import com.wsr.UiEvent
+import com.wsr.UiState
+import com.wsr.chat.ai.Assistant
+import com.wsr.chat.ai.Content
+import com.wsr.chat.ai.Part
+import com.wsr.rememberPresenter
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 @Composable
-internal fun rememberAssistantPresenter(
-    controller: MemoController = koinInject(),
-): AssistantPresenter = rememberPresenter {
-    AssistantPresenter(controller = controller)
-}
+internal fun rememberChatPresenter(controller: MemoController = koinInject()): ChatPresenter =
+    rememberPresenter {
+        ChatPresenter(controller = controller)
+    }
 
-internal class AssistantPresenter(
+internal class ChatPresenter(
     private val controller: MemoController,
-) : Presenter<AssistantUiState, UiEvent>(AssistantUiState()) {
+) : Presenter<ChatUiState, UiEvent>(ChatUiState()) {
 
     private lateinit var assistant: Assistant
 
@@ -34,39 +38,42 @@ internal class AssistantPresenter(
     fun onClickSend() {
         val message = uiState.input
         val history = uiState.messages
-        uiState = uiState.copy(input = "", messages = history + MessageUiState.User(message))
+        uiState = uiState.copy(input = "", messages = history + ChatMessageUiState.User(message))
         scope.launch {
             val messages = assistant.send(
                 message = message,
                 history = history.map { it.toContent() },
             )
-            uiState = uiState.copy(input = "", messages = messages.map { MessageUiState.from(it) })
+            uiState = uiState.copy(
+                input = "",
+                messages = messages.map { ChatMessageUiState.from(it) },
+            )
         }
     }
 }
 
-internal data class AssistantUiState(
-    val messages: List<MessageUiState> = emptyList(),
+internal data class ChatUiState(
+    val messages: List<ChatMessageUiState> = emptyList(),
     val input: String = "",
 ) : UiState
 
-internal sealed interface MessageUiState {
+internal sealed interface ChatMessageUiState {
     fun toContent(): Content
 
-    data class User(val text: String) : MessageUiState {
+    data class User(val text: String) : ChatMessageUiState {
         override fun toContent(): Content = Content.User(part = Part.Text(text))
     }
 
-    data class Tool(val name: String, val result: String) : MessageUiState {
+    data class Tool(val name: String, val result: String) : ChatMessageUiState {
         override fun toContent(): Content = Content.Tool(name = name, result = result)
     }
 
-    data class AI(val text: String) : MessageUiState {
+    data class AI(val text: String) : ChatMessageUiState {
         override fun toContent(): Content = Content.AI(part = Part.Text(text))
     }
 
     companion object {
-        fun from(content: Content): MessageUiState {
+        fun from(content: Content): ChatMessageUiState {
             val part = when (content.part) {
                 is Part.Text -> (content.part as Part.Text).value
             }

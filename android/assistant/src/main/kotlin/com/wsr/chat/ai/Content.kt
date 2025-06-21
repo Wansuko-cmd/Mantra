@@ -1,4 +1,4 @@
-package com.wsr.ai
+package com.wsr.chat.ai
 
 internal sealed interface Content {
     val part: Part

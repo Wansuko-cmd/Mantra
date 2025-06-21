@@ -1,4 +1,4 @@
-package com.wsr.ai
+package com.wsr.chat.ai
 
 import dev.shreyaspatil.ai.client.generativeai.type.FunctionCallPart
 import dev.shreyaspatil.ai.client.generativeai.type.FunctionDeclaration

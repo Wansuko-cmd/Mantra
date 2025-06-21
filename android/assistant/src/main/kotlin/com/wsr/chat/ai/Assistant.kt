@@ -1,4 +1,4 @@
-package com.wsr.ai
+package com.wsr.chat.ai
 
 import com.wsr.MemoController
 import com.wsr.mcp.GET_MEMOS
