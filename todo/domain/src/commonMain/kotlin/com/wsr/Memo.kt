@@ -17,11 +17,14 @@ data class Memo private constructor(
         description = description,
     )
 
+    fun getItem(id: ItemId) = items.first { it.id == id }
+
     fun addItem(
         title: String,
         description: String,
+        checked: Boolean = false,
     ) = copy(
-        items = items + Item(title = title, description = description),
+        items = items + Item(title = title, description = description, checked = checked),
     )
 
     fun updateItem(

@@ -1,6 +1,5 @@
 package com.wsr.item
 
-import com.wsr.Item
 import com.wsr.Memo
 import com.wsr.MemoId
 import com.wsr.MemoRepository

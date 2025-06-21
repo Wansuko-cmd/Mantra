@@ -1,6 +1,7 @@
 package com.wsr
 
 import com.wsr.item.AddItemUseCase
+import com.wsr.item.MoveItemUseCase
 import com.wsr.item.RemoveItemUseCase
 import com.wsr.item.UpdateItemUseCase
 import kotlinx.coroutines.flow.Flow
@@ -75,6 +76,20 @@ class MemoController(private val productPath: (name: String) -> String) {
                 title = title,
                 description = description,
                 checked = checked,
+            )
+            .let { MemoResponse.from(it) }
+    }
+
+    suspend fun moveItem(
+        itemId: ItemResponseId,
+        from: MemoResponseId,
+        to: MemoResponseId,
+    ): MemoResponse {
+        return MoveItemUseCase(repository)
+            .invoke(
+                itemId = ItemId(itemId.value),
+                from = MemoId(from.value),
+                to = MemoId(to.value),
             )
             .let { MemoResponse.from(it) }
     }

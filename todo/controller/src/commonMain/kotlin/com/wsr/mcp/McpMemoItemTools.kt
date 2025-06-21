@@ -18,6 +18,7 @@ import kotlinx.serialization.json.putJsonObject
 internal fun Server.applyMemoItemTools(controller: MemoController) = this.apply {
     createMemoItemTool(controller)
     updateMemoItemTool(controller)
+    moveMemoItemTool(controller)
 }
 
 private fun Server.createMemoItemTool(controller: MemoController) = this.apply {
@@ -121,3 +122,50 @@ private fun Server.updateMemoItemTool(controller: MemoController) = this.apply {
         }
     }
 }
+
+private fun Server.moveMemoItemTool(controller: MemoController) = this.apply {
+    addTool(
+        name = "move_memo_item",
+        description = """
+            TODOと紐づけるメモを変更します
+        """.trimIndent(),
+        inputSchema = Tool.Input(
+            properties = buildJsonObject {
+                putJsonObject("item_id") {
+                    put("type", "string")
+                    put("description", "更新するTODOのID")
+                }
+                putJsonObject("from_memo_id") {
+                    put("type", "string")
+                    put("description", "紐づけ元のメモの識別子")
+                }
+                putJsonObject("to_memo_id") {
+                    put("type", "string")
+                    put("description", "紐づけ先のメモの識別子")
+                }
+            },
+            required = listOf("item_id", "from_memo_id", "to_memo_id"),
+        ),
+    ) { request ->
+        val itemId = request.arguments["item_id"]?.jsonPrimitive?.contentOrNull
+        val fromId = request.arguments["from_memo_id"]?.jsonPrimitive?.contentOrNull
+        val toId = request.arguments["to_memo_id"]?.jsonPrimitive?.contentOrNull
+
+        if (itemId == null || fromId == null || toId == null) {
+            val content = TextContent("memo_id, item_idは必須です")
+            return@addTool CallToolResult(content = listOf(content))
+        }
+        try {
+            val memo = controller.moveItem(
+                itemId = ItemResponseId(itemId),
+                from = MemoResponseId(fromId),
+                to = MemoResponseId(toId),
+            )
+            val context = TextContent("移動先のメモ: ${memo.toJsonString()}")
+            CallToolResult(content = listOf(context))
+        } catch (e: Exception) {
+            CallToolResult(content = listOf(TextContent("エラー: $e")))
+        }
+    }
+}
+
