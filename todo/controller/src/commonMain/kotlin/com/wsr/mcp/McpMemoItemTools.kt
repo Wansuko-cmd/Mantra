@@ -92,15 +92,15 @@ private fun Server.updateMemoItemTool(controller: MemoController) = this.apply {
                 }
                 putJsonObject("title") {
                     put("type", "string")
-                    put("description", "更新するTODOのタイトル")
+                    put("description", "更新後のTODOのタイトル")
                 }
                 putJsonObject("description") {
                     put("type", "string")
-                    put("description", "更新するTODOの説明文")
+                    put("description", "更新後のTODOの説明文")
                 }
                 putJsonObject("checked") {
                     put("type", "bool")
-                    put("description", "更新するTODOのチェック状態")
+                    put("description", "更新後のTODOのチェック状態")
                 }
             },
             required = listOf("memo_id", "item_id"),

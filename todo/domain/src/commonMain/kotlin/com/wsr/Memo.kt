@@ -10,11 +10,11 @@ data class Memo private constructor(
     val items: List<Item>,
 ) {
     fun update(
-        title: String,
-        description: String,
+        title: String? = null,
+        description: String? = null,
     ) = copy(
-        title = title,
-        description = description,
+        title = title ?: this.title,
+        description = description ?: this.description,
     )
 
     fun getItem(id: ItemId) = items.first { it.id == id }

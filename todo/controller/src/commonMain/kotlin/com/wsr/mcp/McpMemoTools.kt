@@ -1,6 +1,7 @@
 package com.wsr.mcp
 
 import com.wsr.MemoController
+import com.wsr.MemoResponseId
 import com.wsr.toJsonString
 import io.modelcontextprotocol.kotlin.sdk.CallToolResult
 import io.modelcontextprotocol.kotlin.sdk.TextContent
@@ -15,10 +16,12 @@ import kotlinx.serialization.json.putJsonObject
 
 const val GET_MEMOS = "get_memos"
 const val CREATE_MEMO = "create_memo"
+const val UPDATE_MEMO = "update_memo"
 
 internal fun Server.applyMemoTools(controller: MemoController) = this.apply {
     getMemosTool(controller)
     createMemoTool(controller)
+    updateMemoTool(controller)
 }
 
 private fun Server.getMemosTool(controller: MemoController): Server = this.apply {
@@ -73,3 +76,48 @@ private fun Server.createMemoTool(controller: MemoController): Server = this.app
         }
     }
 }
+
+private fun Server.updateMemoTool(controller: MemoController): Server = this.apply {
+    addTool(
+        name = UPDATE_MEMO,
+        description = """
+            指定されたメモに付随する情報を更新します
+            メモに紐づくアイテムを更新したい場合は${UPDATE_MEMO_ITEM}を利用してください
+            指定するために用いるIDは${GET_MEMOS}で確認可能です
+        """.trimIndent(),
+        inputSchema = Tool.Input(
+            properties = buildJsonObject {
+                putJsonObject("memo_id") {
+                    put("type", "string")
+                    put("description", "更新するメモの識別子")
+                }
+                putJsonObject("title") {
+                    put("type", "string")
+                    put("description", "更新後のメモのタイトル")
+                }
+                putJsonObject("description") {
+                    put("type", "string")
+                    put("description", "更新後のメモの説明文")
+                }
+            },
+            required = listOf("memo_id"),
+        ),
+    ) { request ->
+        val memoId = request.arguments["memo_id"]?.jsonPrimitive?.contentOrNull
+        val title = request.arguments["title"]?.jsonPrimitive?.contentOrNull
+        val description = request.arguments["description"]?.jsonPrimitive?.contentOrNull
+        if (memoId != null) {
+            val memo = controller.update(
+                id = MemoResponseId(memoId),
+                title = title,
+                description = description,
+            )
+            val content = TextContent("更新後のメモ: ${memo.toJsonString()}")
+            CallToolResult(content = listOf(content))
+        } else {
+            val content = TextContent("titleは必須です")
+            CallToolResult(content = listOf(content))
+        }
+    }
+}
+

@@ -30,8 +30,8 @@ class MemoController(private val productPath: (name: String) -> String) {
 
     suspend fun update(
         id: MemoResponseId,
-        title: String,
-        description: String,
+        title: String? = null,
+        description: String? = null,
     ): MemoResponse {
         return UpdateMemoUseCase(repository)
             .invoke(
