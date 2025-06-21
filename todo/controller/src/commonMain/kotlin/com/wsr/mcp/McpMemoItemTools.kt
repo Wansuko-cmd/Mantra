@@ -15,6 +15,10 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
 
+const val CREATE_MEMO_ITEM = "create_memo_item"
+const val UPDATE_MEMO_ITEM = "update_memo_item"
+const val MOVE_MEMO_ITEM = "move_memo_item"
+
 internal fun Server.applyMemoItemTools(controller: MemoController) = this.apply {
     createMemoItemTool(controller)
     updateMemoItemTool(controller)
@@ -23,9 +27,10 @@ internal fun Server.applyMemoItemTools(controller: MemoController) = this.apply 
 
 private fun Server.createMemoItemTool(controller: MemoController) = this.apply {
     addTool(
-        name = "create_memo_item",
+        name = CREATE_MEMO_ITEM,
         description = """
-            新たなTODOを作成します
+            指定されたメモに紐づく新たなTODOを作成します
+            指定するために用いるIDは${GET_MEMOS}で確認可能です
         """.trimIndent(),
         inputSchema = Tool.Input(
             properties = buildJsonObject {
@@ -68,9 +73,10 @@ private fun Server.createMemoItemTool(controller: MemoController) = this.apply {
 
 private fun Server.updateMemoItemTool(controller: MemoController) = this.apply {
     addTool(
-        name = "update_memo_item",
+        name = UPDATE_MEMO_ITEM,
         description = """
-            TODOの内容を更新します
+            指定されたメモ上の、指定されたTODOを更新します
+            指定するために用いるIDは${GET_MEMOS}で確認可能です
         """.trimIndent(),
         inputSchema = Tool.Input(
             properties = buildJsonObject {
@@ -125,9 +131,10 @@ private fun Server.updateMemoItemTool(controller: MemoController) = this.apply {
 
 private fun Server.moveMemoItemTool(controller: MemoController) = this.apply {
     addTool(
-        name = "move_memo_item",
+        name = MOVE_MEMO_ITEM,
         description = """
-            TODOと紐づけるメモを変更します
+            指定されたTODOと紐づくメモをfrom -> toに変更します
+            指定するために用いるIDは${GET_MEMOS}で確認可能です
         """.trimIndent(),
         inputSchema = Tool.Input(
             properties = buildJsonObject {

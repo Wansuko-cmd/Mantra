@@ -13,6 +13,9 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
 
+const val GET_MEMOS = "get_memos"
+const val CREATE_MEMO = "create_memo"
+
 internal fun Server.applyMemoTools(controller: MemoController) = this.apply {
     getMemosTool(controller)
     createMemoTool(controller)
@@ -20,7 +23,7 @@ internal fun Server.applyMemoTools(controller: MemoController) = this.apply {
 
 private fun Server.getMemosTool(controller: MemoController): Server = this.apply {
     addTool(
-        name = "get_memos",
+        name = GET_MEMOS,
         description = """
             登録されている全てのメモを返します
         """.trimIndent(),
@@ -37,7 +40,7 @@ private fun Server.getMemosTool(controller: MemoController): Server = this.apply
 
 private fun Server.createMemoTool(controller: MemoController): Server = this.apply {
     addTool(
-        name = "create_memo",
+        name = CREATE_MEMO,
         description = """
             新たなメモを作成します
         """.trimIndent(),
