@@ -38,3 +38,6 @@ include(":todo:domain")
 include(":todo:usecase")
 include(":todo:repository")
 include(":todo:controller")
+
+// Other
+include(":utils")

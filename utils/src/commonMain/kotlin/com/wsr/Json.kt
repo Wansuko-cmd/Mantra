@@ -1,4 +1,4 @@
-package com.wsr.utils
+package com.wsr
 
 import kotlinx.serialization.json.Json
 

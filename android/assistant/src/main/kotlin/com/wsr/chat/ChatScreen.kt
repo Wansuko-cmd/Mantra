@@ -62,7 +62,7 @@ private fun ChatScreen(
                             contentDescription = null,
                         )
                     }
-                }
+                },
             )
         },
         bottomBar = {

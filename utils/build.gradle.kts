@@ -1,23 +1,16 @@
 plugins {
     alias(buildLogic.plugins.kotlin.multiplatform)
-    alias(libs.plugins.serialization)
 }
 
 android {
-    namespace = "com.wsr.todo.repository"
+    namespace = "com.wsr.utils"
 }
 
 kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(projects.todo.domain)
-                implementation(projects.utils)
-
-                implementation(libs.kotlin.coroutine)
-                implementation(libs.kotlin.datetime)
                 implementation(libs.kotlin.serialization)
-
                 implementation(libs.datastore.core.okio)
             }
         }

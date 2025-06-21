@@ -24,5 +24,4 @@ fun AssistantScreen() {
             SettingScreen(onBackPress = controller::popBackStack)
         }
     }
-
 }

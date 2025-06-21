@@ -1,4 +1,4 @@
-package com.wsr.utils
+package com.wsr
 
 import androidx.datastore.core.okio.OkioSerializer
 import okio.BufferedSink
