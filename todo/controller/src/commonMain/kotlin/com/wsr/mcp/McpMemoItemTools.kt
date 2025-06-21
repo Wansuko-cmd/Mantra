@@ -58,7 +58,7 @@ private fun Server.createMemoItemsTool(controller: MemoController) = this.apply 
             )
             CallToolResult(content = listOf(TextContent("成功")))
         } catch (e: Exception) {
-            CallToolResult(content = listOf(TextContent("失敗")))
+            CallToolResult(content = listOf(TextContent("失敗: $e")))
         }
     }
 }

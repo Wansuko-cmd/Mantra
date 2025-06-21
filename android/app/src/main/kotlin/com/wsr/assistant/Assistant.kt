@@ -79,11 +79,8 @@ class Assistant private constructor(private val client: McpClient) {
     }
 
     private suspend fun FunctionCallPart.call(): List<Content> {
-        val request = Content.AI(
-            part = Part.Text("${name}を呼び出し $args"),
-        )
         val response = client.callTool(this)
-        return listOf(request, response)
+        return listOf(response)
     }
 
     companion object {
