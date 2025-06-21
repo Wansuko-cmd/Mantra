@@ -1,6 +1,7 @@
 package com.wsr
 
 import android.app.Application
+import com.wsr.setting.store.SettingStore
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
@@ -17,7 +18,11 @@ class MainApplication : Application() {
     }
 
     private val module = module {
+        // TODO
         single { MemoController(::producePath) }
+
+        // Assistant
+        single { SettingStore(::producePath) }
     }
 
     private fun producePath(name: String, initialize: Boolean = false) = filesDir

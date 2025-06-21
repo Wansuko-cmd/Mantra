@@ -9,6 +9,7 @@ android {
 
 dependencies {
     implementation(projects.android.utils)
+    implementation(projects.utils)
 
     implementation(projects.todo.controller)
 
@@ -20,4 +21,6 @@ dependencies {
 
     implementation(libs.mcp)
     implementation(libs.generative.ai)
+
+    implementation(libs.datastore.core.okio)
 }
