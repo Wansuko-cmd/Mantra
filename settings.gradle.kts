@@ -27,9 +27,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Mantra"
 
-include(":utils")
-include(":lib")
-
 // APP
 include(":android:app")
 include(":android:assistant")
