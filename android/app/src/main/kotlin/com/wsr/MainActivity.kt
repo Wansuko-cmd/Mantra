@@ -36,6 +36,6 @@ class MainActivity : ComponentActivity() {
 
     private enum class LPRoute {
         Assistant,
-        Memo;
+        Memo,
     }
 }

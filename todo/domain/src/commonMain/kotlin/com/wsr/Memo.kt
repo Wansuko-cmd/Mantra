@@ -9,30 +9,18 @@ data class Memo private constructor(
     val description: String,
     val items: List<Item>,
 ) {
-    fun update(
-        title: String? = null,
-        description: String? = null,
-    ) = copy(
+    fun update(title: String? = null, description: String? = null) = copy(
         title = title ?: this.title,
         description = description ?: this.description,
     )
 
     fun getItem(id: ItemId) = items.first { it.id == id }
 
-    fun addItem(
-        title: String,
-        description: String,
-        checked: Boolean = false,
-    ) = copy(
+    fun addItem(title: String, description: String, checked: Boolean = false) = copy(
         items = items + Item(title = title, description = description, checked = checked),
     )
 
-    fun updateItem(
-        id: ItemId,
-        title: String?,
-        description: String?,
-        checked: Boolean?,
-    ) = copy(
+    fun updateItem(id: ItemId, title: String?, description: String?, checked: Boolean?) = copy(
         items = items.map { item ->
             if (item.id == id) {
                 Item(
@@ -50,22 +38,14 @@ data class Memo private constructor(
     fun removeItem(id: ItemId) = copy(items = items.filterNot { it.id == id })
 
     companion object {
-        fun create(
-            title: String,
-            description: String,
-        ) = Memo(
+        fun create(title: String, description: String) = Memo(
             id = MemoId(UUID.randomUUID().toString()),
             title = title,
             description = description,
             items = emptyList(),
         )
 
-        fun reconstruct(
-            id: MemoId,
-            title: String,
-            description: String,
-            items: List<Item>,
-        ) = Memo(
+        fun reconstruct(id: MemoId, title: String, description: String, items: List<Item>) = Memo(
             id = id,
             title = title,
             description = description,
@@ -82,12 +62,7 @@ data class Item internal constructor(
     val checked: Boolean = false,
 ) {
     companion object {
-        fun reconstruct(
-            id: ItemId,
-            title: String,
-            description: String,
-            checked: Boolean,
-        ) = Item(
+        fun reconstruct(id: ItemId, title: String, description: String, checked: Boolean) = Item(
             id = id,
             title = title,
             description = description,

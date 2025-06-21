@@ -7,10 +7,7 @@ import com.wsr.MemoRepository
 import kotlinx.coroutines.flow.first
 
 class RemoveItemUseCase(private val repository: MemoRepository) {
-    suspend operator fun invoke(
-        memoId: MemoId,
-        itemId: ItemId,
-    ): Memo {
+    suspend operator fun invoke(memoId: MemoId, itemId: ItemId): Memo {
         val memo = repository.get(memoId).first()
         return memo
             .removeItem(itemId)

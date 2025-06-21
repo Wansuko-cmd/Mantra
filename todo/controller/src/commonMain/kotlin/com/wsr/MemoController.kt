@@ -19,10 +19,7 @@ class MemoController(private val productPath: (name: String) -> String) {
         .invoke()
         .map { memos -> memos.map { MemoResponse.from(it) } }
 
-    suspend fun create(
-        title: String,
-        description: String,
-    ): MemoResponse {
+    suspend fun create(title: String, description: String): MemoResponse {
         return CreateMemoUseCase(repository)
             .invoke(title = title, description = description)
             .let { MemoResponse.from(it) }
@@ -48,11 +45,7 @@ class MemoController(private val productPath: (name: String) -> String) {
             .let { MemoResponseId(it.value) }
     }
 
-    suspend fun addItem(
-        id: MemoResponseId,
-        title: String,
-        description: String,
-    ): MemoResponse {
+    suspend fun addItem(id: MemoResponseId, title: String, description: String): MemoResponse {
         return AddItemUseCase(repository)
             .invoke(
                 id = MemoId(id.value),
@@ -94,10 +87,7 @@ class MemoController(private val productPath: (name: String) -> String) {
             .let { MemoResponse.from(it) }
     }
 
-    suspend fun removeItem(
-        memoId: MemoResponseId,
-        itemId: ItemResponseId,
-    ): MemoResponse {
+    suspend fun removeItem(memoId: MemoResponseId, itemId: ItemResponseId): MemoResponse {
         return RemoveItemUseCase(repository)
             .invoke(
                 memoId = MemoId(memoId.value),

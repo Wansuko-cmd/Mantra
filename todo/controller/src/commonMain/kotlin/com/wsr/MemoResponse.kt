@@ -56,8 +56,8 @@ internal fun MemoResponse.toJsonString(): String {
     return """
     {
         id: ${id.value},
-        title: ${title},
-        description: ${description},
+        title: $title,
+        description: $description,
         items: $items
     }
     """.trimIndent()

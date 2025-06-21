@@ -75,7 +75,6 @@ private fun MemoShowScreen(
     onClickItemDetail: (itemId: ItemResponseId) -> Unit,
     onClickItemDelete: (itemId: ItemResponseId) -> Unit,
     detailBottomSheetListener: MemoShowDetailBottomSheetListener,
-
 ) {
     Scaffold(
         topBar = {

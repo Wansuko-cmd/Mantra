@@ -22,9 +22,9 @@ class McpClient private constructor(
 ) {
     suspend fun callTool(part: FunctionCallPart): Content.Tool {
         val result = client.callTool(
-                name = part.name,
-                arguments = part.args.orEmpty(),
-            )
+            name = part.name,
+            arguments = part.args.orEmpty(),
+        )
         val content = result?.content?.joinToString("\n") { (it as TextContent).text.orEmpty() }
         return Content.Tool(
             name = part.name,
@@ -46,7 +46,6 @@ class McpClient private constructor(
         }
     }
 }
-
 
 private fun ListToolsResult.toTools(): List<Tool> {
     val declarations = tools.map { tool ->

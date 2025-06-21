@@ -7,11 +7,7 @@ import com.wsr.MemoRepository
 import kotlinx.coroutines.flow.first
 
 class MoveItemUseCase(private val repository: MemoRepository) {
-    suspend operator fun invoke(
-        itemId: ItemId,
-        from: MemoId,
-        to: MemoId,
-    ): Memo {
+    suspend operator fun invoke(itemId: ItemId, from: MemoId, to: MemoId): Memo {
         val fromMemo = repository.get(from).first()
         val toMemo = repository.get(to).first()
 

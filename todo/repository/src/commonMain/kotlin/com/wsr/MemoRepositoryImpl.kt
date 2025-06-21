@@ -41,7 +41,7 @@ private fun Memo.toModel() = MemoModel(
     id = id.value,
     title = title,
     description = description,
-    items = items.map { it.toModel() }
+    items = items.map { it.toModel() },
 )
 
 private fun Item.toModel() = ItemModel(

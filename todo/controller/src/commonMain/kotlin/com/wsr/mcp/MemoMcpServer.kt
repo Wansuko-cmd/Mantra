@@ -9,13 +9,13 @@ import io.modelcontextprotocol.kotlin.sdk.server.Server
 import io.modelcontextprotocol.kotlin.sdk.server.ServerOptions
 import io.modelcontextprotocol.kotlin.sdk.server.StdioServerTransport
 import io.modelcontextprotocol.kotlin.sdk.shared.Transport
+import java.net.ServerSocket
+import java.net.Socket
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import kotlinx.io.asSink
 import kotlinx.io.buffered
-import java.net.ServerSocket
-import java.net.Socket
 
 private const val LOCAL_HOST = "127.0.0.1"
 private const val PORT = 12345

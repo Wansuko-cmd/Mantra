@@ -115,12 +115,11 @@ class Assistant private constructor(private val client: McpClient) {
 
     companion object {
         private var instance: Assistant? = null
-        suspend fun create(controller: MemoController): Assistant =
-            instance ?: run {
-                val transport = setUpMcpServer(controller)
-                val client = McpClient.connect(transport)
-                Assistant(client).also { instance = it }
-            }
+        suspend fun create(controller: MemoController): Assistant = instance ?: run {
+            val transport = setUpMcpServer(controller)
+            val client = McpClient.connect(transport)
+            Assistant(client).also { instance = it }
+        }
     }
 }
 

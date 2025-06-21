@@ -18,7 +18,8 @@ private fun Server.addTodoPromptsDisorderly() = this.apply {
             description = """
                 TODOを乱雑に加える際に使うプロンプト
             """.trimIndent(),
-            arguments = null),
+            arguments = null,
+        ),
     ) {
         val prompt = """
             これから色々なTODOを追加していきたいと思います
@@ -35,7 +36,7 @@ private fun Server.addTodoPromptsDisorderly() = this.apply {
                     role = Role.user,
                     content = TextContent(prompt),
                 ),
-            )
+            ),
         )
     }
 }

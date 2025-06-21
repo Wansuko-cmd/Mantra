@@ -20,6 +20,7 @@ class AndroidComposeLibraryPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.android")
                 alias(libs.getPlugin("android.library"))
                 alias(libs.getPlugin("compose.compiler"))
+                alias(libs.getPlugin("ktlint"))
             }
 
             extensions.configure<LibraryExtension> {

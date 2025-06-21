@@ -38,7 +38,10 @@ internal class AssistantPresenter(
         val history = uiState.messages
         uiState = uiState.copy(input = "", messages = history + MessageUiState.User(message))
         scope.launch {
-            val messages = assistant.send(message = message, history = history.map { it.toContent() })
+            val messages = assistant.send(
+                message = message,
+                history = history.map { it.toContent() },
+            )
             uiState = uiState.copy(input = "", messages = messages.map { MessageUiState.from(it) })
         }
     }
