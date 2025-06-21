@@ -11,9 +11,8 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 @Composable
-internal fun rememberSettingPresenter(
-    store: SettingStore = koinInject(),
-) = rememberPresenter { SettingPresenter(store = store) }
+internal fun rememberSettingPresenter(store: SettingStore = koinInject()) =
+    rememberPresenter { SettingPresenter(store = store) }
 
 internal class SettingPresenter(
     private val store: SettingStore,

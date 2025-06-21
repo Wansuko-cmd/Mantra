@@ -8,18 +8,24 @@ import dev.shreyaspatil.ai.client.generativeai.type.FunctionCallPart
 import dev.shreyaspatil.ai.client.generativeai.type.TextPart
 import dev.shreyaspatil.ai.client.generativeai.type.content
 
-internal class Assistant private constructor(private val client: McpClient) {
+internal class Assistant private constructor(
+    private val client: McpClient,
+    private val apiKey: String,
+    private val prompt: String,
+) {
     private val model = GenerativeModel(
         modelName = "gemini-2.0-flash",
-        apiKey = "",
+        apiKey = apiKey,
         tools = client.tools,
         systemInstruction = content("user") {
             text(
                 """
-                あなたは優秀な秘書です
-                主に話を聞いた上で内容をまとめ、メモ帳に整理していくことを業務としています
+                まず、ユーザーからのプロンプトを以下に示します
+                ```
+                $prompt
+                ```
 
-                あなたが扱うメモ帳に関する知識を記述します
+                次にあなたが扱うメモ帳に関する知識を記述します
                 ---------------------------------
                 > ドメイン要素
                 メモに関するドメイン知識について記載します
@@ -115,11 +121,17 @@ internal class Assistant private constructor(private val client: McpClient) {
 
     companion object {
         @Volatile
-        private var instance: Assistant? = null
-        suspend fun create(controller: MemoController): Assistant = instance ?: run {
-            val transport = setUpMcpServer(controller)
-            val client = McpClient.connect(transport)
-            Assistant(client).also { instance = it }
+        private var client: McpClient? = null
+        suspend fun create(controller: MemoController, apiKey: String, prompt: String): Assistant {
+            if (client == null) {
+                val transport = setUpMcpServer(controller)
+                client = McpClient.connect(transport)
+            }
+            return Assistant(
+                client = client!!,
+                apiKey = apiKey,
+                prompt = prompt,
+            )
         }
     }
 }

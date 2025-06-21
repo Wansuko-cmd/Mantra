@@ -9,28 +9,23 @@ import com.wsr.chat.ai.Assistant
 import com.wsr.chat.ai.Content
 import com.wsr.chat.ai.Part
 import com.wsr.rememberPresenter
+import com.wsr.setting.store.SettingStore
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 @Composable
-internal fun rememberChatPresenter(controller: MemoController = koinInject()): ChatPresenter =
-    rememberPresenter {
-        ChatPresenter(controller = controller)
-    }
+internal fun rememberChatPresenter(
+    controller: MemoController = koinInject(),
+    store: SettingStore = koinInject(),
+): ChatPresenter = rememberPresenter {
+    ChatPresenter(controller = controller, store = store)
+}
 
 internal class ChatPresenter(
     private val controller: MemoController,
+    private val store: SettingStore,
 ) : Presenter<ChatUiState, UiEvent>(ChatUiState()) {
-
-    private lateinit var assistant: Assistant
-
-    override fun onRemembered() {
-        super.onRemembered()
-        scope.launch {
-            assistant = Assistant.create(controller)
-        }
-    }
-
     fun onChangeInput(input: String) {
         uiState = uiState.copy(input = input)
     }
@@ -40,6 +35,12 @@ internal class ChatPresenter(
         val history = uiState.messages
         uiState = uiState.copy(input = "", messages = history + ChatMessageUiState.User(message))
         scope.launch {
+            val model = store.data.first()
+            val assistant = Assistant.create(
+                controller = controller,
+                apiKey = model.apiKey,
+                prompt = model.prompt,
+            )
             val messages = assistant.send(
                 message = message,
                 history = history.map { it.toContent() },

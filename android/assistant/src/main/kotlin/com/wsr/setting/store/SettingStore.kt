@@ -18,8 +18,7 @@ class SettingStore(private val producePath: (name: String) -> String) {
 
     val data get() = db.data
 
-    suspend fun update(transform: suspend (SettingModel) -> SettingModel) =
-        db.updateData(transform)
+    suspend fun update(transform: suspend (SettingModel) -> SettingModel) = db.updateData(transform)
 }
 
 @Serializable
