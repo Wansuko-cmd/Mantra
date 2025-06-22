@@ -13,6 +13,7 @@ import dev.shreyaspatil.ai.client.generativeai.type.FunctionCallPart
 import dev.shreyaspatil.ai.client.generativeai.type.TextPart
 import dev.shreyaspatil.ai.client.generativeai.type.content
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 
 internal class GeminiAssistant private constructor(
@@ -97,44 +98,48 @@ internal class GeminiAssistant private constructor(
     )
 
     override val promptInfos: List<PromptInfo> = client.prompts
-    override suspend fun sendPrompt(
+    override fun sendPrompt(
         name: String,
         args: Map<String, String>?,
         history: List<Content>,
-    ): Flow<List<Content>> {
-        return flow {
-            val prompts = client.getPrompt(name, args)
-            if (prompts.isNotEmpty()) {
-                emit(history + prompts)
-                emit(send(content = prompts.last(), history = history + prompts.dropLast(1)))
-            } else {
-                emit(history)
-            }
+    ): Flow<List<Content>> = flow {
+        val prompts = client.getPrompt(name, args)
+        if (prompts.isNotEmpty()) {
+            this.sendBuilder(content = prompts.last(), history = history + prompts.dropLast(1))
+        } else {
+            emit(history)
         }
     }
 
-    override suspend fun send(message: String, history: List<Content>): List<Content> {
+    override fun send(message: String, history: List<Content>): Flow<List<Content>> {
         val content = Content.User(part = Part.Text(message))
-        return send(content, history)
+        return flow { sendBuilder(content, history) }
     }
 
-    private tailrec suspend fun send(content: Content, history: List<Content>): List<Content> {
+    private suspend fun FlowCollector<List<Content>>.sendBuilder(
+        content: Content,
+        history: List<Content>,
+    ) {
+        emit(history + content)
+
         val response = model
             .startChat(history.map { it.toGeminiContent() })
             .sendMessage(content.toGeminiContent())
 
-        return when {
+        when {
             response.functionCalls.isNotEmpty() -> {
                 val result = response.functionCalls.flatMap { it.call() }
-                send(
+                emit(history + content + result.dropLast(1))
+                sendBuilder(
                     content = result.last(),
                     history = history + content + result.dropLast(1),
                 )
             }
 
-            else -> history + content + Content.AI(
-                part = Part.Text(response.text.orEmpty()),
-            )
+            else -> {
+                val respondContent = Content.AI(part = Part.Text(response.text.orEmpty()))
+                emit(history + content + respondContent)
+            }
         }
     }
 

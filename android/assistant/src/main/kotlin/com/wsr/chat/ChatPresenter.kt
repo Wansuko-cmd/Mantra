@@ -37,14 +37,12 @@ internal class ChatPresenter(
         val history = uiState.messages
         uiState = uiState.copy(input = "", messages = history + ChatMessageUiState.User(message))
         scope.launch {
-            val messages = createAssistant().send(
+            createAssistant().send(
                 message = message,
                 history = history.map { it.toContent() },
-            )
-            uiState = uiState.copy(
-                input = "",
-                messages = messages.map { ChatMessageUiState.from(it) },
-            )
+            ).collect { messages ->
+                uiState = uiState.copy(messages = messages.map { ChatMessageUiState.from(it) })
+            }
         }
     }
 

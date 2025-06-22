@@ -4,12 +4,12 @@ import kotlinx.coroutines.flow.Flow
 
 internal interface Assistant {
     val promptInfos: List<PromptInfo>
-    suspend fun sendPrompt(
+    fun sendPrompt(
         name: String,
         args: Map<String, String>? = null,
         history: List<Content> = emptyList(),
     ): Flow<List<Content>>
-    suspend fun send(message: String, history: List<Content> = emptyList()): List<Content>
+    fun send(message: String, history: List<Content> = emptyList()): Flow<List<Content>>
 }
 
 internal typealias PromptInfo = io.modelcontextprotocol.kotlin.sdk.Prompt
