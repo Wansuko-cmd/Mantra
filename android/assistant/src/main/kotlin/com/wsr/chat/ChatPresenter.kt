@@ -5,7 +5,7 @@ import com.wsr.MemoController
 import com.wsr.Presenter
 import com.wsr.UiEvent
 import com.wsr.UiState
-import com.wsr.chat.ai.Assistant
+import com.wsr.chat.ai.gemini.GeminiAssistant
 import com.wsr.chat.ai.Content
 import com.wsr.chat.ai.Part
 import com.wsr.rememberPresenter
@@ -36,7 +36,7 @@ internal class ChatPresenter(
         uiState = uiState.copy(input = "", messages = history + ChatMessageUiState.User(message))
         scope.launch {
             val model = store.data.first()
-            val assistant = Assistant.create(
+            val assistant = GeminiAssistant.create(
                 controller = controller,
                 apiKey = model.apiKey,
                 prompt = model.prompt,

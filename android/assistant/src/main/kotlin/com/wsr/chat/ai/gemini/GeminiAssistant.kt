@@ -1,6 +1,9 @@
-package com.wsr.chat.ai
+package com.wsr.chat.ai.gemini
 
 import com.wsr.MemoController
+import com.wsr.chat.ai.Content
+import com.wsr.chat.ai.McpClient
+import com.wsr.chat.ai.Part
 import com.wsr.mcp.GET_MEMOS
 import com.wsr.mcp.setUpMcpServer
 import dev.shreyaspatil.ai.client.generativeai.GenerativeModel
@@ -8,7 +11,7 @@ import dev.shreyaspatil.ai.client.generativeai.type.FunctionCallPart
 import dev.shreyaspatil.ai.client.generativeai.type.TextPart
 import dev.shreyaspatil.ai.client.generativeai.type.content
 
-internal class Assistant private constructor(
+internal class GeminiAssistant private constructor(
     private val client: McpClient,
     private val apiKey: String,
     private val prompt: String,
@@ -16,7 +19,7 @@ internal class Assistant private constructor(
     private val model = GenerativeModel(
         modelName = "gemini-2.0-flash",
         apiKey = apiKey,
-        tools = client.tools,
+        tools = client.tools.toGeminiTools(),
         systemInstruction = content("user") {
             text(
                 """
@@ -115,19 +118,23 @@ internal class Assistant private constructor(
     }
 
     private suspend fun FunctionCallPart.call(): List<Content> {
-        val response = client.callTool(this)
+        val response = client.callTool(name = name, args = args.orEmpty())
         return listOf(response)
     }
 
     companion object {
         @Volatile
         private var client: McpClient? = null
-        suspend fun create(controller: MemoController, apiKey: String, prompt: String): Assistant {
+        suspend fun create(
+            controller: MemoController,
+            apiKey: String,
+            prompt: String,
+        ): GeminiAssistant {
             if (client == null) {
                 val transport = setUpMcpServer(controller)
                 client = McpClient.connect(transport)
             }
-            return Assistant(
+            return GeminiAssistant(
                 client = client!!,
                 apiKey = apiKey,
                 prompt = prompt,
