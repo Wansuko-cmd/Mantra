@@ -33,16 +33,18 @@ internal class ChatPresenter(
     }
 
     fun onClickSend() {
+        if (uiState.isLoading) return
         val message = uiState.input
         val history = uiState.messages
-        uiState = uiState.copy(input = "", messages = history + ChatMessageUiState.User(message))
         scope.launch {
+            uiState = uiState.copy(isLoading = true)
             createAssistant().send(
                 message = message,
                 history = history.map { it.toContent() },
             ).collect { messages ->
                 uiState = uiState.copy(messages = messages.map { ChatMessageUiState.from(it) })
             }
+            uiState = uiState.copy(isLoading = false)
         }
     }
 
@@ -59,16 +61,16 @@ internal class ChatPresenter(
         uiState = uiState.copy(templateBottomSheet = null)
     }
 
-    fun onClickTemplateBottomSheetItem(info: PromptInfo, args: Map<String, String>? = null) {
-        uiState = uiState.copy(templateBottomSheet = null)
+    fun onClickTemplateBottomSheetInfo(info: PromptInfo, args: Map<String, String>? = null) {
+        if (uiState.isLoading) return
         scope.launch {
+            uiState = uiState.copy(templateBottomSheet = null, isLoading = true)
             createAssistant()
                 .sendPrompt(info.name, args)
                 .collect { messages ->
-                    uiState = uiState.copy(
-                        messages = messages.map { ChatMessageUiState.from(it) },
-                    )
+                    uiState = uiState.copy(messages = messages.map { ChatMessageUiState.from(it) })
                 }
+            uiState = uiState.copy(isLoading = false)
         }
     }
 
@@ -86,6 +88,7 @@ internal data class ChatUiState(
     val messages: List<ChatMessageUiState> = emptyList(),
     val input: String = "",
     val templateBottomSheet: ChatTemplateBottomSheetUiState? = null,
+    val isLoading: Boolean = false,
 ) : UiState
 
 internal sealed interface ChatMessageUiState {
