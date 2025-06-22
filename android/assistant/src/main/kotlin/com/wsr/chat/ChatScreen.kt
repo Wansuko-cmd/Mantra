@@ -1,21 +1,23 @@
 package com.wsr.chat
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.PostAdd
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,6 +28,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -118,24 +122,46 @@ private fun ChatBottomBar(
 ) {
     Row(
         modifier = Modifier
+            .drawBehind {
+                drawLine(
+                    strokeWidth = 1.dp.toPx(),
+                    color = MantraTheme.colors.Black20,
+                    start = Offset.Zero,
+                    end = Offset.Zero.copy(x = size.width),
+                )
+            }
             .padding(horizontal = 12.dp)
-            .heightIn(min = 64.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        BasicTextField(
-            value = input,
-            onValueChange = onChangeInput,
-            textStyle = TextStyle(fontSize = 16.sp),
+        Row(
             modifier = Modifier
                 .weight(1f)
                 .padding(8.dp)
                 .background(
+                    color = MantraTheme.colors.Black10,
+                    shape = MantraTheme.shape.Medium,
+                )
+                .border(
+                    width = 1.dp,
                     color = MantraTheme.colors.Black20,
                     shape = MantraTheme.shape.Medium,
                 )
                 .padding(horizontal = 12.dp, vertical = 8.dp),
-        )
+        ) {
+            BasicTextField(
+                value = input,
+                onValueChange = onChangeInput,
+                textStyle = TextStyle(fontSize = 16.sp),
+                modifier = Modifier.weight(1f),
+            )
+            Icon(
+                modifier = Modifier.size(24.dp),
+                imageVector = Icons.Default.PostAdd,
+                tint = MantraTheme.colors.Black60,
+                contentDescription = null,
+            )
+        }
         IconButton(onClick = onClickSend) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Send,

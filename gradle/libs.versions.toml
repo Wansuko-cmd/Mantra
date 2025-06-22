@@ -50,6 +50,7 @@ androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", versi
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-compose-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
+androidx-compose-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-compose-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-compose-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-compose-lifecycle" }
@@ -82,6 +83,7 @@ androidx-compose = [
     "androidx-compose-ui",
     "androidx-compose-material3",
     "androidx-compose-icons-core",
+    "androidx-compose-icons-extended",
     "androidx-compose-tooling",
     "androidx-compose-preview",
     "androidx-compose-lifecycle",
