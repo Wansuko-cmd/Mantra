@@ -66,6 +66,7 @@ compose-rin = { module = "io.github.takahirom.rin:rin", version.ref = "compose-r
 
 # VRT
 junit = { group = "junit", name="junit", version.ref = "junit" }
+androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 roborazzi-core = { group = "io.github.takahirom.roborazzi", name = "roborazzi", version.ref = "roborazzi" }
 roborazzi-compose = { group = "io.github.takahirom.roborazzi", name = "roborazzi-compose", version.ref = "roborazzi" }
@@ -109,6 +110,7 @@ androidx-compose = [
 ]
 vrt = [
     "junit",
+    "androidx-compose-ui-test-junit4",
     "robolectric",
     "roborazzi-core",
     "roborazzi-compose",
