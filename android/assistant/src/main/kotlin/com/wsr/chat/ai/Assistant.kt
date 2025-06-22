@@ -1,7 +1,12 @@
 package com.wsr.chat.ai
 
+internal interface Assistant {
+    suspend fun send(message: String, history: List<Content> = emptyList()): List<Content>
+}
+
 internal sealed interface Content {
     val part: Part
+
     data class User(override val part: Part) : Content
     data class Tool(
         val name: String,
@@ -15,6 +20,7 @@ internal sealed interface Content {
             """.trimIndent(),
         )
     }
+
     data class AI(override val part: Part) : Content
 }
 

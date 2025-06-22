@@ -1,6 +1,7 @@
 package com.wsr.chat.ai.gemini
 
 import com.wsr.MemoController
+import com.wsr.chat.ai.Assistant
 import com.wsr.chat.ai.Content
 import com.wsr.chat.ai.McpClient
 import com.wsr.chat.ai.Part
@@ -15,7 +16,7 @@ internal class GeminiAssistant private constructor(
     private val client: McpClient,
     private val apiKey: String,
     private val prompt: String,
-) {
+) : Assistant {
     private val model = GenerativeModel(
         modelName = "gemini-2.0-flash",
         apiKey = apiKey,
@@ -92,7 +93,10 @@ internal class GeminiAssistant private constructor(
         },
     )
 
-    suspend fun send(message: String, history: List<Content> = emptyList()): List<Content> {
+    override suspend fun send(
+        message: String,
+        history: List<Content>,
+    ): List<Content> {
         val content = Content.User(part = Part.Text(message))
         return send(content, history)
     }
