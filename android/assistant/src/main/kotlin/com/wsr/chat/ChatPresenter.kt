@@ -28,6 +28,21 @@ internal class ChatPresenter(
     private val controller: MemoController,
     private val store: SettingStore,
 ) : Presenter<ChatUiState, UiEvent>(ChatUiState()) {
+
+    companion object {
+        private var history: List<ChatMessageUiState> = emptyList()
+    }
+
+    override fun onRemembered() {
+        super.onRemembered()
+        uiState = uiState.copy(messages = history)
+    }
+
+    override fun onForgotten() {
+        super.onForgotten()
+        history = uiState.messages
+    }
+
     fun onChangeInput(input: String) {
         uiState = uiState.copy(input = input)
     }
@@ -37,7 +52,7 @@ internal class ChatPresenter(
         val message = uiState.input
         val history = uiState.messages
         scope.launch {
-            uiState = uiState.copy(isLoading = true)
+            uiState = uiState.copy(input = "", isLoading = true)
             createAssistant().send(
                 message = message,
                 history = history.map { it.toContent() },
