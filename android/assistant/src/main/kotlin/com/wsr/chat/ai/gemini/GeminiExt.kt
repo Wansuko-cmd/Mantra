@@ -1,20 +1,20 @@
 package com.wsr.chat.ai.gemini
 
+import com.wsr.chat.ai.ToolInfo
 import dev.shreyaspatil.ai.client.generativeai.type.FunctionDeclaration
 import dev.shreyaspatil.ai.client.generativeai.type.Schema
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
-private typealias McpTool = io.modelcontextprotocol.kotlin.sdk.Tool
 private typealias GeminiTool = dev.shreyaspatil.ai.client.generativeai.type.Tool
 
-internal fun List<McpTool>.toGeminiTools(): List<GeminiTool> {
+internal fun List<ToolInfo>.toGeminiTools(): List<GeminiTool> {
     val declarations = this.map { tool -> tool.toFunctionDeclaration() }
     return listOf(GeminiTool(declarations))
 }
 
-private fun McpTool.toFunctionDeclaration() = FunctionDeclaration(
+private fun ToolInfo.toFunctionDeclaration() = FunctionDeclaration(
     name = name,
     description = description.orEmpty(),
     parameters = inputSchema.properties

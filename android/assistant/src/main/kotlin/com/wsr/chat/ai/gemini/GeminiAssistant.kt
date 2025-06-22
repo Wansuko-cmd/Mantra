@@ -5,6 +5,7 @@ import com.wsr.chat.ai.Assistant
 import com.wsr.chat.ai.Content
 import com.wsr.chat.ai.McpClient
 import com.wsr.chat.ai.Part
+import com.wsr.chat.ai.PromptInfo
 import com.wsr.mcp.GET_MEMOS
 import com.wsr.mcp.setUpMcpServer
 import dev.shreyaspatil.ai.client.generativeai.GenerativeModel
@@ -92,6 +93,20 @@ internal class GeminiAssistant private constructor(
             )
         },
     )
+
+    override val promptInfos: List<PromptInfo> = client.prompts
+    override suspend fun sendPrompt(
+        name: String,
+        args: Map<String, String>?,
+        history: List<Content>,
+    ): List<Content> {
+        val prompts = client.getPrompt(name, args)
+        return if (prompts.isNotEmpty()) {
+            send(content = prompts.last(), history = history + prompts.dropLast(1))
+        } else {
+            history
+        }
+    }
 
     override suspend fun send(
         message: String,

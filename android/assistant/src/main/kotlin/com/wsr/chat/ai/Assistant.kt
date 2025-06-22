@@ -1,8 +1,17 @@
 package com.wsr.chat.ai
 
 internal interface Assistant {
+    val promptInfos: List<PromptInfo>
+    suspend fun sendPrompt(
+        name: String,
+        args: Map<String, String>? = null,
+        history: List<Content> = emptyList(),
+    ): List<Content>
     suspend fun send(message: String, history: List<Content> = emptyList()): List<Content>
 }
+
+internal typealias PromptInfo = io.modelcontextprotocol.kotlin.sdk.Prompt
+internal typealias ToolInfo = io.modelcontextprotocol.kotlin.sdk.Tool
 
 internal sealed interface Content {
     val part: Part
