@@ -64,10 +64,13 @@ internal class ChatPresenter(
     fun onClickTemplateBottomSheetItem(info: PromptInfo, args: Map<String, String>? = null) {
         uiState = uiState.copy(templateBottomSheet = null)
         scope.launch {
-            val messages = createAssistant().sendPrompt(info.name, args)
-            uiState = uiState.copy(
-                messages = messages.map { ChatMessageUiState.from(it) },
-            )
+            createAssistant()
+                .sendPrompt(info.name, args)
+                .collect { messages ->
+                    uiState = uiState.copy(
+                        messages = messages.map { ChatMessageUiState.from(it) },
+                    )
+                }
         }
     }
 

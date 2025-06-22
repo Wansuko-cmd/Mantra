@@ -12,6 +12,8 @@ import dev.shreyaspatil.ai.client.generativeai.GenerativeModel
 import dev.shreyaspatil.ai.client.generativeai.type.FunctionCallPart
 import dev.shreyaspatil.ai.client.generativeai.type.TextPart
 import dev.shreyaspatil.ai.client.generativeai.type.content
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 internal class GeminiAssistant private constructor(
     private val client: McpClient,
@@ -99,12 +101,15 @@ internal class GeminiAssistant private constructor(
         name: String,
         args: Map<String, String>?,
         history: List<Content>,
-    ): List<Content> {
-        val prompts = client.getPrompt(name, args)
-        return if (prompts.isNotEmpty()) {
-            send(content = prompts.last(), history = history + prompts.dropLast(1))
-        } else {
-            history
+    ): Flow<List<Content>> {
+        return flow {
+            val prompts = client.getPrompt(name, args)
+            if (prompts.isNotEmpty()) {
+                emit(history + prompts)
+                emit(send(content = prompts.last(), history = history + prompts.dropLast(1)))
+            } else {
+                emit(history)
+            }
         }
     }
 

@@ -1,12 +1,14 @@
 package com.wsr.chat.ai
 
+import kotlinx.coroutines.flow.Flow
+
 internal interface Assistant {
     val promptInfos: List<PromptInfo>
     suspend fun sendPrompt(
         name: String,
         args: Map<String, String>? = null,
         history: List<Content> = emptyList(),
-    ): List<Content>
+    ): Flow<List<Content>>
     suspend fun send(message: String, history: List<Content> = emptyList()): List<Content>
 }
 
