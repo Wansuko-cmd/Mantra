@@ -17,8 +17,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.wsr.ItemResponse
+import com.wsr.ItemResponseId
 import com.wsr.MemoResponseId
+import com.wsr.theme.MantraTheme
 
 @Composable
 internal fun ShowScreen(memoId: MemoResponseId, onBackPress: () -> Unit) {
@@ -27,7 +31,7 @@ internal fun ShowScreen(memoId: MemoResponseId, onBackPress: () -> Unit) {
         uiState = presenter.uiState,
         onBackPress = onBackPress,
         onClickFabButton = presenter::onClickFabButton,
-        showItemCardListener = ShowItemCardListener(
+        itemCardListener = ShowItemCardListener(
             onChangeTitle = presenter::onChangeItemTitle,
             onChangeChecked = presenter::onChangeItemChecked,
             onClickDetail = presenter::onClickItemDetail,
@@ -47,7 +51,7 @@ private fun ShowScreen(
     uiState: ShowUiState,
     onBackPress: () -> Unit,
     onClickFabButton: () -> Unit,
-    showItemCardListener: ShowItemCardListener,
+    itemCardListener: ShowItemCardListener,
     detailBottomSheetListener: ShowDetailBottomSheetListener,
 ) {
     Scaffold(
@@ -83,7 +87,7 @@ private fun ShowScreen(
             items(uiState.items, key = { it.id.value }) { item ->
                 ShowItemCard(
                     item = item,
-                    listener = showItemCardListener,
+                    listener = itemCardListener,
                     modifier = Modifier
                         .padding(vertical = 12.dp)
                         .animateItem(),
@@ -97,6 +101,51 @@ private fun ShowScreen(
         ShowDetailBottomSheet(
             uiState = detailBottomSheetUiState,
             listener = detailBottomSheetListener,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ShowScreenPreview() {
+    MantraTheme {
+        ShowScreen(
+            uiState = ShowUiState(
+                title = "メモタイトル",
+                items = listOf(
+                    ItemResponse(
+                        id = ItemResponseId("1"),
+                        title = "タイトル1",
+                        description = "説明文1",
+                        checked = false,
+                    ),
+                    ItemResponse(
+                        id = ItemResponseId("2"),
+                        title = "タイトル2",
+                        description = "説明文2",
+                        checked = false,
+                    ),
+                    ItemResponse(
+                        id = ItemResponseId("3"),
+                        title = "タイトル3",
+                        description = "説明文3",
+                        checked = true,
+                    ),
+                ),
+            ),
+            onBackPress = {},
+            onClickFabButton = {},
+            itemCardListener = ShowItemCardListener(
+                onClickDetail = {},
+                onClickDelete = {},
+                onChangeTitle = { _, _ -> },
+                onChangeChecked = { _, _ -> },
+            ),
+            detailBottomSheetListener = ShowDetailBottomSheetListener(
+                onDismiss = {},
+                onChangeTitle = {},
+                onChangeDescription = {},
+            ),
         )
     }
 }

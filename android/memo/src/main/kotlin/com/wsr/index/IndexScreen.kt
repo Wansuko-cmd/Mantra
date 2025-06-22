@@ -16,7 +16,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.wsr.MemoResponse
 import com.wsr.MemoResponseId
 import com.wsr.theme.MantraTheme
 import com.wsr.theme.colors
@@ -99,6 +101,48 @@ private fun IndexScreen(
         IndexDetailBottomSheet(
             uiState = detailBottomSheet,
             listener = detailBottomSheetListener,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun IndexScreenPreview() {
+    MantraTheme {
+        IndexScreen(
+            uiState = IndexUiState(
+                memos = listOf(
+                    MemoResponse(
+                        id = MemoResponseId("1"),
+                        title = "タイトル1",
+                        description = "説明文1",
+                        items = listOf(),
+                    ),
+                    MemoResponse(
+                        id = MemoResponseId("2"),
+                        title = "タイトル2",
+                        description = "説明文2",
+                        items = listOf(),
+                    ),
+                ),
+            ),
+            onClickFabButton = {},
+            memoCardListener = IndexMemoCardListener(
+                onClick = {},
+                onClickDelete = {},
+                onClickDetail = {},
+            ),
+            createDialogListener = IndexCreateDialogListener(
+                onDismiss = {},
+                onChangeTitle = {},
+                onChangeDescription = {},
+                onClickPrimaryButton = {},
+            ),
+            detailBottomSheetListener = IndexDetailBottomSheetListener(
+                onDismiss = {},
+                onChangeDescription = {},
+                onChangeTitle = {},
+            ),
         )
     }
 }

@@ -24,6 +24,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.wsr.theme.MantraTheme
 import com.wsr.theme.colors
@@ -130,5 +131,32 @@ private fun ChatScreen(
                     .align(Alignment.Center),
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun ChatScreenPreview() {
+    MantraTheme {
+        ChatScreen(
+            uiState = ChatUiState(
+                messages = listOf(
+                    ChatMessageUiState.User("Userのメッセージ"),
+                    ChatMessageUiState.Tool(name = "ツール名", result = "結果"),
+                    ChatMessageUiState.AI("AIのメッセージ"),
+                ),
+                input = "入力",
+            ),
+            onClickSetting = {},
+            bottomBarListener = ChatBottomBarListener(
+                onClickTemplate = {},
+                onChangeInput = {},
+                onClickSend = {},
+            ),
+            templateBottomSheetListener = ChatTemplateBottomSheetListener(
+                onDismiss = {},
+                onClickInfo = {},
+            ),
+        )
     }
 }

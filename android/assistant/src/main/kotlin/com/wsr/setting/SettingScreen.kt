@@ -22,7 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.wsr.theme.MantraTheme
 
 @Composable
 internal fun SettingScreen(onBackPress: () -> Unit) {
@@ -89,5 +91,21 @@ private fun SettingScreen(
                 modifier = Modifier.fillMaxWidth(),
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun SettingScreenPreview() {
+    MantraTheme {
+        SettingScreen(
+            uiState = SettingUiState(
+                apiKey = "API_KEY",
+                prompt = "システムプロンプト",
+            ),
+            onBackPress = {},
+            onChangeApiKey = {},
+            onChangePrompt = {},
+        )
     }
 }
