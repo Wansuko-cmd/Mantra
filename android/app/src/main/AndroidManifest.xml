@@ -9,7 +9,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Template">
+        android:theme="@style/Theme.Mantra">
         <activity
             android:name="com.wsr.MainActivity"
             android:exported="true"
