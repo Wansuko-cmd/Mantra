@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
@@ -44,7 +43,12 @@ internal fun ChatScreen(navigateToSetting: () -> Unit) {
         uiState = presenter.uiState,
         onClickSetting = navigateToSetting,
         onChangeInput = presenter::onChangeInput,
+        onClickTemplate = presenter::onClickTemplate,
         onClickSend = presenter::onClickSend,
+        templateBottomSheetListener = ChatTemplateBottomSheetListener(
+            onDismiss = presenter::onDismissTemplateBottomSheet,
+            onClickInfo = presenter::onClickTemplateBottomSheetItem,
+        ),
     )
 }
 
@@ -54,7 +58,9 @@ private fun ChatScreen(
     uiState: ChatUiState,
     onClickSetting: () -> Unit,
     onChangeInput: (String) -> Unit,
+    onClickTemplate: () -> Unit,
     onClickSend: () -> Unit,
+    templateBottomSheetListener: ChatTemplateBottomSheetListener,
 ) {
     Scaffold(
         topBar = {
@@ -74,6 +80,7 @@ private fun ChatScreen(
             ChatBottomBar(
                 input = uiState.input,
                 onChangeInput = onChangeInput,
+                onClickTemplate = onClickTemplate,
                 onClickSend = onClickSend,
             )
         },
@@ -112,12 +119,21 @@ private fun ChatScreen(
             }
         }
     }
+
+    val templateBottomSheet = uiState.templateBottomSheet
+    if (templateBottomSheet != null) {
+        ChatTemplateBottomSheet(
+            uiState = templateBottomSheet,
+            listener = templateBottomSheetListener,
+        )
+    }
 }
 
 @Composable
 private fun ChatBottomBar(
     input: String,
     onChangeInput: (String) -> Unit,
+    onClickTemplate: () -> Unit,
     onClickSend: () -> Unit,
 ) {
     Row(
@@ -130,14 +146,16 @@ private fun ChatBottomBar(
                     end = Offset.Zero.copy(x = size.width),
                 )
             }
-            .padding(horizontal = 12.dp)
+            .padding(horizontal = 12.dp, vertical = 12.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(
+        BasicTextField(
+            value = input,
+            onValueChange = onChangeInput,
+            textStyle = TextStyle(fontSize = 16.sp),
             modifier = Modifier
                 .weight(1f)
-                .padding(8.dp)
                 .background(
                     color = MantraTheme.colors.Black10,
                     shape = MantraTheme.shape.Medium,
@@ -148,21 +166,18 @@ private fun ChatBottomBar(
                     shape = MantraTheme.shape.Medium,
                 )
                 .padding(horizontal = 12.dp, vertical = 8.dp),
-        ) {
-            BasicTextField(
-                value = input,
-                onValueChange = onChangeInput,
-                textStyle = TextStyle(fontSize = 16.sp),
-                modifier = Modifier.weight(1f),
-            )
+        )
+        IconButton(onClick = onClickTemplate) {
             Icon(
-                modifier = Modifier.size(24.dp),
                 imageVector = Icons.Default.PostAdd,
                 tint = MantraTheme.colors.Black60,
                 contentDescription = null,
             )
         }
-        IconButton(onClick = onClickSend) {
+        IconButton(
+            onClick = onClickSend,
+            enabled = input.isNotBlank(),
+        ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Send,
                 contentDescription = null,

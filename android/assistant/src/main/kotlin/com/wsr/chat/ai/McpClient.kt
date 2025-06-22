@@ -15,10 +15,7 @@ internal class McpClient private constructor(
     val tools: List<ToolInfo>,
     val prompts: List<PromptInfo>,
 ) {
-    suspend fun getPrompt(
-        name: String,
-        args: Map<String, String>? = null,
-    ): List<Content> {
+    suspend fun getPrompt(name: String, args: Map<String, String>? = null): List<Content> {
         val messages = client
             .getPrompt(request = GetPromptRequest(name = name, arguments = args))
             ?.messages

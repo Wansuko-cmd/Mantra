@@ -108,10 +108,7 @@ internal class GeminiAssistant private constructor(
         }
     }
 
-    override suspend fun send(
-        message: String,
-        history: List<Content>,
-    ): List<Content> {
+    override suspend fun send(message: String, history: List<Content>): List<Content> {
         val content = Content.User(part = Part.Text(message))
         return send(content, history)
     }

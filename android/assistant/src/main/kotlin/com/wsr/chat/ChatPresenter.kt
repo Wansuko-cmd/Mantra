@@ -5,9 +5,11 @@ import com.wsr.MemoController
 import com.wsr.Presenter
 import com.wsr.UiEvent
 import com.wsr.UiState
-import com.wsr.chat.ai.gemini.GeminiAssistant
+import com.wsr.chat.ai.Assistant
 import com.wsr.chat.ai.Content
 import com.wsr.chat.ai.Part
+import com.wsr.chat.ai.PromptInfo
+import com.wsr.chat.ai.gemini.GeminiAssistant
 import com.wsr.rememberPresenter
 import com.wsr.setting.store.SettingStore
 import kotlinx.coroutines.flow.first
@@ -35,13 +37,7 @@ internal class ChatPresenter(
         val history = uiState.messages
         uiState = uiState.copy(input = "", messages = history + ChatMessageUiState.User(message))
         scope.launch {
-            val model = store.data.first()
-            val assistant = GeminiAssistant.create(
-                controller = controller,
-                apiKey = model.apiKey,
-                prompt = model.prompt,
-            )
-            val messages = assistant.send(
+            val messages = createAssistant().send(
                 message = message,
                 history = history.map { it.toContent() },
             )
@@ -51,11 +47,44 @@ internal class ChatPresenter(
             )
         }
     }
+
+    fun onClickTemplate() {
+        scope.launch {
+            val infos = createAssistant().promptInfos
+            uiState = uiState.copy(
+                templateBottomSheet = ChatTemplateBottomSheetUiState(infos = infos),
+            )
+        }
+    }
+
+    fun onDismissTemplateBottomSheet() {
+        uiState = uiState.copy(templateBottomSheet = null)
+    }
+
+    fun onClickTemplateBottomSheetItem(info: PromptInfo, args: Map<String, String>? = null) {
+        uiState = uiState.copy(templateBottomSheet = null)
+        scope.launch {
+            val messages = createAssistant().sendPrompt(info.name, args)
+            uiState = uiState.copy(
+                messages = messages.map { ChatMessageUiState.from(it) },
+            )
+        }
+    }
+
+    private suspend fun createAssistant(): Assistant {
+        val model = store.data.first()
+        return GeminiAssistant.create(
+            controller = controller,
+            apiKey = model.apiKey,
+            prompt = model.prompt,
+        )
+    }
 }
 
 internal data class ChatUiState(
     val messages: List<ChatMessageUiState> = emptyList(),
     val input: String = "",
+    val templateBottomSheet: ChatTemplateBottomSheetUiState? = null,
 ) : UiState
 
 internal sealed interface ChatMessageUiState {
@@ -86,3 +115,7 @@ internal sealed interface ChatMessageUiState {
         }
     }
 }
+
+internal data class ChatTemplateBottomSheetUiState(
+    val infos: List<PromptInfo>,
+)
