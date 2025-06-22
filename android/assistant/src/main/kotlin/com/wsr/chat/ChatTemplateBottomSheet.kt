@@ -31,7 +31,7 @@ internal fun ChatTemplateBottomSheet(
                 .padding(vertical = 16.dp),
         ) {
             itemsIndexed(uiState.infos) { index, info ->
-                InfoCard(
+                ChatInfoCard(
                     info = info,
                     modifier = Modifier
                         .clickable { listener.onClickInfo(info) }
@@ -46,7 +46,7 @@ internal fun ChatTemplateBottomSheet(
 }
 
 @Composable
-private fun InfoCard(info: PromptInfo, modifier: Modifier = Modifier) {
+private fun ChatInfoCard(info: PromptInfo, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxWidth()

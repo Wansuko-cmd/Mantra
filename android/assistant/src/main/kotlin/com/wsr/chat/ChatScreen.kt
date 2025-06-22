@@ -1,11 +1,8 @@
 package com.wsr.chat
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -13,10 +10,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.PostAdd
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -27,14 +21,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.wsr.theme.MantraTheme
-import com.wsr.theme.colors
-import com.wsr.theme.shape
 
 @Composable
 internal fun ChatScreen(navigateToSetting: () -> Unit) {
@@ -42,9 +29,11 @@ internal fun ChatScreen(navigateToSetting: () -> Unit) {
     ChatScreen(
         uiState = presenter.uiState,
         onClickSetting = navigateToSetting,
-        onChangeInput = presenter::onChangeInput,
-        onClickTemplate = presenter::onClickTemplate,
-        onClickSend = presenter::onClickSend,
+        bottomBarListener = ChatBottomBarListener(
+            onChangeInput = presenter::onChangeInput,
+            onClickTemplate = presenter::onClickTemplate,
+            onClickSend = presenter::onClickSend,
+        ),
         templateBottomSheetListener = ChatTemplateBottomSheetListener(
             onDismiss = presenter::onDismissTemplateBottomSheet,
             onClickInfo = presenter::onClickTemplateBottomSheetItem,
@@ -57,9 +46,7 @@ internal fun ChatScreen(navigateToSetting: () -> Unit) {
 private fun ChatScreen(
     uiState: ChatUiState,
     onClickSetting: () -> Unit,
-    onChangeInput: (String) -> Unit,
-    onClickTemplate: () -> Unit,
-    onClickSend: () -> Unit,
+    bottomBarListener: ChatBottomBarListener,
     templateBottomSheetListener: ChatTemplateBottomSheetListener,
 ) {
     Scaffold(
@@ -79,9 +66,7 @@ private fun ChatScreen(
         bottomBar = {
             ChatBottomBar(
                 input = uiState.input,
-                onChangeInput = onChangeInput,
-                onClickTemplate = onClickTemplate,
-                onClickSend = onClickSend,
+                listener = bottomBarListener,
             )
         },
         modifier = Modifier
@@ -126,63 +111,5 @@ private fun ChatScreen(
             uiState = templateBottomSheet,
             listener = templateBottomSheetListener,
         )
-    }
-}
-
-@Composable
-private fun ChatBottomBar(
-    input: String,
-    onChangeInput: (String) -> Unit,
-    onClickTemplate: () -> Unit,
-    onClickSend: () -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .drawBehind {
-                drawLine(
-                    strokeWidth = 1.dp.toPx(),
-                    color = MantraTheme.colors.Black20,
-                    start = Offset.Zero,
-                    end = Offset.Zero.copy(x = size.width),
-                )
-            }
-            .padding(horizontal = 12.dp, vertical = 12.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        BasicTextField(
-            value = input,
-            onValueChange = onChangeInput,
-            textStyle = TextStyle(fontSize = 16.sp),
-            modifier = Modifier
-                .weight(1f)
-                .background(
-                    color = MantraTheme.colors.Black10,
-                    shape = MantraTheme.shape.Medium,
-                )
-                .border(
-                    width = 1.dp,
-                    color = MantraTheme.colors.Black20,
-                    shape = MantraTheme.shape.Medium,
-                )
-                .padding(horizontal = 12.dp, vertical = 8.dp),
-        )
-        IconButton(onClick = onClickTemplate) {
-            Icon(
-                imageVector = Icons.Default.PostAdd,
-                tint = MantraTheme.colors.Black60,
-                contentDescription = null,
-            )
-        }
-        IconButton(
-            onClick = onClickSend,
-            enabled = input.isNotBlank(),
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.Send,
-                contentDescription = null,
-                tint = MantraTheme.colors.SecondaryBeige60,
-            )
-        }
     }
 }
