@@ -17,6 +17,12 @@ androidx-compose-hilt-navigation = "1.2.0"
 
 compose-rin = "0.3.0"
 
+# VRT
+junit = "4.13.2"
+robolectric = "4.14.1"
+roborazzi = "1.43.1"
+composable-preview-scanner = "0.6.1"
+
 # Koin
 koin = "4.1.0"
 
@@ -58,6 +64,15 @@ androidx-compose-navigation = { group = "androidx.navigation", name = "navigatio
 androidx-compose-hilt = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidx-compose-hilt-navigation" }
 compose-rin = { module = "io.github.takahirom.rin:rin", version.ref = "compose-rin" }
 
+# VRT
+junit = { group = "junit", name="junit", version.ref = "junit" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+roborazzi-core = { group = "io.github.takahirom.roborazzi", name = "roborazzi", version.ref = "roborazzi" }
+roborazzi-compose = { group = "io.github.takahirom.roborazzi", name = "roborazzi-compose", version.ref = "roborazzi" }
+roborazzi-rule = { group = "io.github.takahirom.roborazzi", name = "roborazzi-junit-rule", version.ref = "roborazzi" }
+roborazzi-composable-preview-scanner = { group = "io.github.takahirom.roborazzi", name = "roborazzi-compose-preview-scanner-support", version.ref = "roborazzi" }
+composable-preview-scanner = { group = "io.github.sergio-sastre.ComposablePreviewScanner", name = "android", version.ref = "composable-preview-scanner" }
+
 # Koin
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
 koin-core = { group = "io.insert-koin", name = "koin-core" }
@@ -76,6 +91,7 @@ mcp = { group = "io.modelcontextprotocol", name = "kotlin-sdk", version.ref = "m
 # Gradle
 gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 gradle-android = { group = "com.android.tools.build", name = "gradle", version.ref = "gradle-android" }
+gradle-roborazzi = { group = "io.github.takahirom.roborazzi", name = "roborazzi-gradle-plugin", version.ref = "roborazzi" }
 
 [bundles]
 androidx = ["androidx-core", "androidx-lifecycle-runtime"]
@@ -91,6 +107,15 @@ androidx-compose = [
     "androidx-compose-hilt",
     "compose-rin",
 ]
+vrt = [
+    "junit",
+    "robolectric",
+    "roborazzi-core",
+    "roborazzi-compose",
+    "roborazzi-rule",
+    "roborazzi-composable-preview-scanner",
+    "composable-preview-scanner",
+]
 koin = ["koin-core", "koin-android", "koin-compose"]
 
 [plugins]
@@ -103,3 +128,4 @@ serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref 
 android-application = { id = "com.android.application", version.ref = "gradle-android" }
 android-library = { id = "com.android.library", version.ref = "gradle-android" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }

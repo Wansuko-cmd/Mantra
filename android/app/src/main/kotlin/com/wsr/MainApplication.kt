@@ -5,6 +5,7 @@ import com.wsr.setting.store.SettingStore
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
+import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 
 class MainApplication : Application() {
@@ -29,4 +30,9 @@ class MainApplication : Application() {
         .resolve(name)
         .apply { if (initialize) delete() }
         .absolutePath
+
+    override fun onTerminate() {
+        super.onTerminate()
+        stopKoin()
+    }
 }
