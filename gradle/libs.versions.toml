@@ -16,6 +16,7 @@ androidx-compose-navigation = "2.9.0"
 androidx-compose-hilt-navigation = "1.2.0"
 
 compose-rin = "0.3.0"
+compose-markdown = "0.5.7"
 
 # VRT
 junit = "4.13.2"
@@ -62,7 +63,9 @@ androidx-compose-preview = { group = "androidx.compose.ui", name = "ui-tooling-p
 androidx-compose-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-compose-lifecycle" }
 androidx-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidx-compose-navigation" }
 androidx-compose-hilt = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidx-compose-hilt-navigation" }
+
 compose-rin = { module = "io.github.takahirom.rin:rin", version.ref = "compose-rin" }
+compose-markdown = { group = "com.github.jeziellago", name = "compose-markdown", version.ref = "compose-markdown" }
 
 # VRT
 junit = { group = "junit", name="junit", version.ref = "junit" }
@@ -107,6 +110,7 @@ androidx-compose = [
     "androidx-compose-navigation",
     "androidx-compose-hilt",
     "compose-rin",
+    "compose-markdown",
 ]
 vrt = [
     "junit",

@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.wsr.theme.MantraTheme
 import com.wsr.theme.colors
 import com.wsr.theme.shape
+import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @Composable
 internal fun UserBubble(message: ChatMessageUiState.User, modifier: Modifier = Modifier) {
@@ -65,8 +66,8 @@ private fun Bubble(text: String, color: Color, modifier: Modifier = Modifier) {
         modifier = modifier
             .background(color = color, shape = MantraTheme.shape.Medium)
             .padding(horizontal = 12.dp, vertical = 8.dp)
-            .widthIn(max = 250.dp),
+            .widthIn(max = 300.dp),
     ) {
-        Text(text = text)
+        MarkdownText(text)
     }
 }

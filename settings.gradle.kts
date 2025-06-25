@@ -17,6 +17,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven(url = "https://androidx.dev/storage/compose-compiler/repository/")
+        maven { url = uri("https://jitpack.io") }
     }
     versionCatalogs {
         create("buildLogic") {
