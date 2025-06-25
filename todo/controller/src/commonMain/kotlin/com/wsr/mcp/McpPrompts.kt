@@ -8,11 +8,12 @@ import io.modelcontextprotocol.kotlin.sdk.TextContent
 import io.modelcontextprotocol.kotlin.sdk.server.Server
 
 internal fun Server.applyPrompts() = this.apply {
-    addTodoPromptsDisorderly()
-    readTodoPrompts()
+    addTodoDisorderlyPrompt()
+    readTodoPrompt()
+    sortOutTodosPrompt()
 }
 
-private fun Server.addTodoPromptsDisorderly() = this.apply {
+private fun Server.addTodoDisorderlyPrompt() = this.apply {
     addPrompt(
         prompt = Prompt(
             name = "TODO乱雑追加用プロンプト",
@@ -50,7 +51,7 @@ private fun Server.addTodoPromptsDisorderly() = this.apply {
     }
 }
 
-private fun Server.readTodoPrompts() = this.apply {
+private fun Server.readTodoPrompt() = this.apply {
     addPrompt(
         prompt = Prompt(
             name = "TODO要約用",
@@ -66,6 +67,41 @@ private fun Server.readTodoPrompts() = this.apply {
             2. 存在するTODOのうち、チェックがついていないものを数える
             3. メモを、チェックがついていないTODOが多い順に並べる
             4. メモのタイトル、説明文、チェックのついていないTODOのタイトルを順番に説明する
+        """.trimIndent()
+        GetPromptResult(
+            description = "",
+            messages = listOf(
+                PromptMessage(
+                    role = Role.user,
+                    content = TextContent(prompt),
+                ),
+            ),
+        )
+    }
+}
+
+private fun Server.sortOutTodosPrompt() = this.apply {
+    addPrompt(
+        prompt = Prompt(
+            name = "TODO整理用",
+            description = """
+                TODOとメモの関係を整理する際に利用
+            """.trimIndent(),
+            arguments = null,
+        ),
+    ) {
+        val prompt = """
+            これからメモとTODOの紐付けを見直したいと考えています
+            以下のステップに従ってTODOの整理をしてください
+            1. ${GET_MEMOS}を利用してメモとTODOを取得する
+            2. メモのタイトルと説明文を読み、どのようなTODOが紐づくメモなのかを理解する
+            3. 2で確認したメモと紐づくTODOのタイトルと説明文を読み、意味合いが異なるものを抽出する
+            4. 3で抽出したTODOについて、どのメモに紐付けるのがいいか検討する
+            5-a. 適切なメモが存在した場合、そのメモに追加する旨を提案する
+            5-b. 適切なメモが存在しなかった場合、以下のステップを踏む
+            5-b-1. そのTODOに相応しいメモの名前を提案する
+            5-b-2. 了承を得たら、提案した名前を元にメモを作成する
+            5-b-3. 作成したメモにTODOを追加する
         """.trimIndent()
         GetPromptResult(
             description = "",
