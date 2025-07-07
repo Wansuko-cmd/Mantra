@@ -39,7 +39,7 @@ mcp = "0.5.0"
 gradle-android = "8.10.1"
 
 # Ktlint
-ktlint = "12.3.0"
+ktlint = "13.0.0"
 
 [libraries]
 # Kotlin
