@@ -36,7 +36,7 @@ datastore = "1.1.7"
 mcp = "0.5.0"
 
 # Gradle
-gradle-android = "8.10.1"
+gradle-android = "8.11.1"
 
 # Ktlint
 ktlint = "12.3.0"
