@@ -13,8 +13,8 @@ fun Project.configureCommonAndroidSetting(commonExtension: CommonExtension<*, *,
         }
 
         compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_24
-            targetCompatibility = JavaVersion.VERSION_24
+            sourceCompatibility = JavaVersion.VERSION_11
+            targetCompatibility = JavaVersion.VERSION_11
         }
     }
 }

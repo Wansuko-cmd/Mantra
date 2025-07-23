@@ -8,6 +8,7 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import plugins.ext.alias
 import plugins.ext.buildLogic
 import plugins.ext.configureCommonAndroidSetting
@@ -16,6 +17,7 @@ import plugins.ext.getLibrary
 import plugins.ext.getPlugin
 import plugins.ext.getVersion
 import plugins.ext.implementation
+import plugins.ext.kotlinAndroid
 import plugins.ext.libs
 import plugins.ext.testImplementation
 
@@ -37,6 +39,12 @@ class AndroidComposeApplicationPlugin : Plugin<Project> {
                 }
                 buildFeatures {
                     compose = true
+                }
+
+                kotlinAndroid {
+                    compilerOptions {
+                        jvmTarget.set(JvmTarget.JVM_11)
+                    }
                 }
 
                 testOptions {
