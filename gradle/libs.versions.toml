@@ -2,17 +2,17 @@
 # Kotlin
 kotlin = "2.1.21"
 coroutine = "1.10.2"
-datetime = "0.6.2"
-serialization = "1.8.1"
+datetime = "0.7.1-0.6.x-compat"
+serialization = "1.9.0"
 
 # AndroidX
 androidx = "1.16.0"
-androidx-lifecycle-runtime = "2.9.1"
+androidx-lifecycle-runtime = "2.9.2"
 
 # Compose
-androidx-compose-bom = "2025.06.01"
-androidx-compose-lifecycle = "2.9.1"
-androidx-compose-navigation = "2.9.0"
+androidx-compose-bom = "2025.07.00"
+androidx-compose-lifecycle = "2.9.2"
+androidx-compose-navigation = "2.9.2"
 androidx-compose-hilt-navigation = "1.2.0"
 
 compose-rin = "0.3.0"
@@ -21,7 +21,7 @@ compose-markdown = "0.5.7"
 # VRT
 junit = "4.13.2"
 robolectric = "4.15.1"
-roborazzi = "1.45.1"
+roborazzi = "1.46.1"
 composable-preview-scanner = "0.6.1"
 
 # Koin
@@ -34,10 +34,10 @@ generative-ai = "0.9.0-1.1.0"
 datastore = "1.1.7"
 
 # MCP
-mcp = "0.5.0"
+mcp = "0.6.0"
 
 # Gradle
-gradle-android = "8.10.1"
+gradle-android = "8.11.1"
 
 # Ktlint
 ktlint = "12.3.0"
