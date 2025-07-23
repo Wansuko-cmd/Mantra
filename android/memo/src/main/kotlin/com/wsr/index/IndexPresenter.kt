@@ -19,9 +19,8 @@ internal fun rememberIndexPresenter(controller: MemoController = koinInject()): 
         IndexPresenter(controller = controller)
     }
 
-internal class IndexPresenter(
-    private val controller: MemoController,
-) : Presenter<IndexUiState, UiEvent>(initialValue = IndexUiState()) {
+internal class IndexPresenter(private val controller: MemoController) :
+    Presenter<IndexUiState, UiEvent>(initialValue = IndexUiState()) {
     override fun onRemembered() {
         controller.getAll()
             .onEach { uiState = IndexUiState(it) }
@@ -101,10 +100,7 @@ internal data class IndexUiState(
     val detailBottomSheet: IndexDetailBottomSheetUiState? = null,
 ) : UiState
 
-internal data class IndexCreateDialogUiState(
-    val title: String = "",
-    val description: String = "",
-)
+internal data class IndexCreateDialogUiState(val title: String = "", val description: String = "")
 
 internal data class IndexDetailBottomSheetUiState(
     val id: MemoResponseId,

@@ -135,6 +135,4 @@ internal sealed interface ChatMessageUiState {
     }
 }
 
-internal data class ChatTemplateBottomSheetUiState(
-    val infos: List<PromptInfo>,
-)
+internal data class ChatTemplateBottomSheetUiState(val infos: List<PromptInfo>)

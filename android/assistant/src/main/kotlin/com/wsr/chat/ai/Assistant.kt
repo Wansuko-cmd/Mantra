@@ -19,10 +19,7 @@ internal sealed interface Content {
     val part: Part
 
     data class User(override val part: Part) : Content
-    data class Tool(
-        val name: String,
-        val result: String,
-    ) : Content {
+    data class Tool(val name: String, val result: String) : Content {
         override val part: Part = Part.Text(
             """
                 "type": "tool_result",

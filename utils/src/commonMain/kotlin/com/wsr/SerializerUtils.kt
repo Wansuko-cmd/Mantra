@@ -10,9 +10,8 @@ inline fun <reified T> createSerializer(defaultValue: T) = object : OkioSerializ
     override val defaultValue: T
         get() = defaultValue
 
-    override suspend fun readFrom(source: BufferedSource): T {
-        return json.decodeFromString<T>(source.readUtf8())
-    }
+    override suspend fun readFrom(source: BufferedSource): T =
+        json.decodeFromString<T>(source.readUtf8())
 
     override suspend fun writeTo(t: T, sink: BufferedSink) {
         sink.use {
