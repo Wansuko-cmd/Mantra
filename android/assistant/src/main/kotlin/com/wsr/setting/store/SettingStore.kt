@@ -22,7 +22,4 @@ class SettingStore(private val producePath: (name: String) -> String) {
 }
 
 @Serializable
-data class SettingModel(
-    val apiKey: String = "",
-    val prompt: String = "",
-)
+data class SettingModel(val apiKey: String = "", val prompt: String = "")
