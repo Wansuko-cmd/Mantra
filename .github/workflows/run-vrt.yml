@@ -17,7 +17,7 @@ jobs:
     steps:
       # 事前準備
       - name: 仮想ブランチにチェックアウト
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Javaのセットアップ
         uses: actions/setup-java@v4
@@ -37,7 +37,7 @@ jobs:
 
       # 記録フェーズ
       - name: 比較元のブランチにチェックアウト
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: main
 
@@ -53,7 +53,7 @@ jobs:
 
       # 比較フェーズ
       - name: 比較先のブランチにチェックアウト
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: 比較元のスクリーンショットをダウンロードする
         uses: actions/download-artifact@v4
