@@ -21,7 +21,7 @@ compose-markdown = "0.5.7"
 # VRT
 junit = "4.13.2"
 robolectric = "4.15.1"
-roborazzi = "1.46.1"
+roborazzi = "1.47.0"
 composable-preview-scanner = "0.6.1"
 
 # Koin
